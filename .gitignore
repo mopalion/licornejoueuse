@@ -1,0 +1,5 @@
+data.csv
+*.sqlite3
+*.png
+
+**/__pycache__

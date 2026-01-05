@@ -1,0 +1,13 @@
+{% extends "games/main.html" %}
+{% block content %}
+<h1>{{ location }}</h1>
+{% if location.game_set.all %}
+<ul>
+  {% for game in location.game_set.all %}
+  <li>{{ game.title }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Aucun jeu à cet endroit</p>
+{% endif %}
+{% endblock %}

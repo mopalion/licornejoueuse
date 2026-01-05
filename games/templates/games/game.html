@@ -1,0 +1,18 @@
+{% extends 'games/main.html' %}
+{% block content %}
+	<h1>{{ game.title }}</h1>
+  <p>{{ game.game_type }}</p>
+	<p>
+	{{ game.details }}
+	</p>
+	<p>
+	Le jeu se trouve à {{ game.location }}.
+	</p>
+	<p>
+	{% if game.qrcode %}
+	Image : <img src="/{{ game.qrcode }}"></img>
+	{% else %}
+	<a href="{% url 'generate_qrcode' game.number %}">Génération qrcode</a>
+	{% endif %}
+	</p>
+{% endblock %}

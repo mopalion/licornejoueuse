@@ -1,0 +1,13 @@
+{% extends "games/main.html" %}
+{% block content %}
+	<h1>Liste des localisations des Jeux la Licorne Joueuse</h1>
+	{% if locations %}
+		<ul>
+		{% for location in locations %}
+		<li><a href="{% url 'location_detail' location.name %}">{{ location }}</a></li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p>Vous n'avez pas de localisations de jeux</p>
+	{% endif %}
+{% endblock %}

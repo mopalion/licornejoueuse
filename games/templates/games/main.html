@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">	
+<head>
+	<meta charset="utf-8">
+	<title>Licorne Joueuse</title>
+  <link href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" rel="stylesheet">
+</head>
+<body>
+	<nav>
+		<ul>
+		<li><a href="{% url 'index' %}">Jeux de société</a></li>
+		<li><a href="{% url 'wooden_index' %}">Jeux en bois</a></li>
+		<li><a href="{% url 'rpg_index' %}">Jeux de rôle</a></li>
+		<li><a href="{% url 'toys_index' %}">Jouets</a></li>
+		<li>
+		<a href="{% url 'location_index' %}">Localisation des jeux</a>
+		</li>
+		</ul>
+	</nav>
+	{% block content %}
+	{% endblock %}
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
+  {% block javascript %}
+  {% endblock %}
+</body>
+</html>
