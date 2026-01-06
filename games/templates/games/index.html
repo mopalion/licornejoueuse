@@ -5,6 +5,7 @@
     <table id="gamesList" class="display">
       <thead>
         <tr>
+          <th>Image</th>
           <th>Numéro</th>
           <th>Nom</th>
           <th>Âge</th>
@@ -14,6 +15,7 @@
       <tbody>
       {% for game in games %}
         <tr>
+          <td><img src="/{{ game.image }}"></img></td>
           <td>{{ game.number }}</td>
           <td><a href="{% url 'detail' game.number %}">{{ game.title }}</a></td>
           <td>{{ game.age }}</td>
