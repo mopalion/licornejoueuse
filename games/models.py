@@ -13,6 +13,7 @@ class Game(models.Model):
     number = models.PositiveIntegerField("Number", blank=False, unique=True)
     location = models.ForeignKey(Location, on_delete=models.PROTECT, blank=False)
     qrcode = models.ImageField(upload_to="medias/qrcode", blank=True)
+    image = models.ImageField(upload_to="medias/games_images", blank=True)
     state = models.CharField(max_length=20, blank=True)
     age = models.PositiveIntegerField()
     theme = models.CharField(max_length=30, blank=True) 

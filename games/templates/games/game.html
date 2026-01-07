@@ -1,6 +1,9 @@
 {% extends 'games/main.html' %}
 {% block content %}
 	<h1>{{ game.title }}</h1>
+  {% if game.image %}
+  <img src="/{{ game.image }}"></img>
+  {% endif %}
   <p>{{ game.game_type }}</p>
 	<p>
 	{{ game.details }}
