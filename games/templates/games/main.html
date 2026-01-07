@@ -1,27 +1,37 @@
+{% load static tailwind_tags %}
 <!doctype html>
 <html lang="fr">	
 <head>
 	<meta charset="utf-8">
 	<title>Licorne Joueuse</title>
-  <link href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" rel="stylesheet">
+  <!-- <link href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" rel="stylesheet"> -->
+  {% tailwind_css %}
 </head>
-<body>
-	<nav>
-		<ul>
-		<li><a href="{% url 'index' %}">Jeux de société</a></li>
-		<li><a href="{% url 'wooden_index' %}">Jeux en bois</a></li>
-		<li><a href="{% url 'rpg_index' %}">Jeux de rôle</a></li>
-		<li><a href="{% url 'toys_index' %}">Jouets</a></li>
-		<li>
+<body class="bg-zinc-50 text-zinc-950">
+  <header>
+  <h1>La Licorne Joueuse - Association</h1>
+  <img src="{% static 'global/banniere_licorne.png' %}" alt="Bannière de l’association La Licorne Joueuse">
+  </header>
+	<nav class="bg-zinc-950 text-zinc-50">
+		<ul class="flex">
+		<li class="flex-1"><a href="{% url 'index' %}">Jeux de société</a></li>
+		<li class="flex-1"><a href="{% url 'wooden_index' %}">Jeux en bois</a></li>
+		<li class="flex-1"><a href="{% url 'rpg_index' %}">Jeux de rôle</a></li>
+		<li class="flex-1"><a href="{% url 'toys_index' %}">Jouets</a></li>
+		<li class="flex-1">
 		<a href="{% url 'location_index' %}">Localisation des jeux</a>
 		</li>
 		</ul>
 	</nav>
-	{% block content %}
-	{% endblock %}
+    {% block content %}
+    {% endblock %}
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
   {% block javascript %}
   {% endblock %}
+  <footer>
+  <hr>
+  <p>La Licorne Joueuse - Association</p>
+  </footer>
 </body>
 </html>

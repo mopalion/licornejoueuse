@@ -2,39 +2,25 @@
 {% block content %}
 	<h1>Liste de jeux de la Licorne Joueuse</h1>
 	{% if games %}
-    <table id="gamesList" class="display">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Numéro</th>
-          <th>Nom</th>
-          <th>Âge</th>
-          <th>Nombre jetons</th>
-        </tr>
-      </thead>
-      <tbody>
+      <div class="flex flex-wrap">
       {% for game in games %}
-        <tr>
-          <td><img src="/{{ game.image }}"></img></td>
-          <td>{{ game.number }}</td>
-          <td><a href="{% url 'detail' game.number %}">{{ game.title }}</a></td>
-          <td>{{ game.age }}</td>
-          <td>{{ game.token }}</td>
-        </tr>
+        <article class="card rounded-x1 shadow-sm bg-yellow-600 m-4 w-96">
+          <figure>
+            <img src="/{{ game.image }}"></img>
+          </figure>
+          <div class="card-body">
+            <h3 class=card-title"">{{ game.title }}</h3>
+            <p class="badge">n°{{ game.number }}</p>
+            <p class="badge">Age minimum : {{ game.age }}</p>
+            <p class="badge">Nb jetons : {{ game.token }}</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary"><a href="{% url 'detail' game.number %}">Pour en savoir plus</a></button>
+            </div>
+          </div>
+        </article>
       {% endfor %}
-      </tbody>
-    </table>
+      </div>
 	{% else %}
 		<p>Vous n'avez pas de jeux</p>
 	{% endif %}
-{% endblock %}
-{% block javascript %}
-  <script type="text/javascript">
-    $(document).ready( function() {
-      $('#gamesList').DataTable({
-        paging: false,
-        select: true
-      });
-    });
-  </script>
 {% endblock %}
