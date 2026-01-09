@@ -1,16 +1,59 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
 from django.utils.text import slugify
 from django.db.utils import IntegrityError
 import csv
 import segno
 from datetime import datetime
+from .forms import GameFilterForm
 
 from .models import Game,Location
 
-def index(request, game_type="boardgame"):
+def index(request, game_type="boardgame", page_number=1):
+    parameters = ""
+    if request.GET:
+        filter_form = GameFilterForm(request.GET)
+        if filter_form.is_valid():
+            games_by_page  = int(filter_form.cleaned_data["games_by_page"])
+            first_parameter = True
+            for k,v in filter_form.cleaned_data.items():
+                if first_parameter:
+                    parameters += "?"
+                    first_parameter = False
+                else:
+                    parameters += "&"
+                parameters += f"{k}={v}"
+        else:
+            filter_form = GameFilterForm()
+    else:
+        filter_form = GameFilterForm()
+    if 'games_by_page' not in locals():
+        games_by_page = 9
     games = Game.objects.filter(game_type=game_type).order_by("number")[:]
-    context = {}
-    context["games"] = games
+    pagination = Paginator(games, games_by_page)
+    page = pagination.page(page_number)
+
+    match game_type:
+        case "boardgame":
+            path = "numbered_index"
+        case "wooden":
+            path = "numbered_wooden_index"
+        case "rpg":
+            path = "numbered_rpg_index"
+        case "toys":
+            path = "numbered_toys_index"
+    context = {
+        "games" : page.object_list,
+        "pagination" : {
+            "previous": page.previous_page_number() if page.has_previous() else None,
+            "next": page.next_page_number() if page.has_next() else None,
+            "number": page_number,
+            "max": pagination.num_pages,
+        },
+        "path" : path,
+        "filter_form" : filter_form,
+        "parameters": parameters
+    }
     return render(request, "games/index.html", context)
 
 def location_index(request):

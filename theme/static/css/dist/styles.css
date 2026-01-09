@@ -8,10 +8,10 @@
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-orange-600: oklch(64.6% 0.222 41.116);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-zinc-50: oklch(98.5% 0 0);
-    --color-zinc-500: oklch(55.2% 0.016 285.938);
     --color-zinc-950: oklch(14.1% 0.005 285.823);
     --color-black: #000;
     --spacing: 0.25rem;
@@ -174,6 +174,96 @@
   }
 }
 @layer utilities {
+  @layer daisyui.l1.l2.l3 {
+    :where(.drawer-side) {
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .drawer-side {
+      pointer-events: none;
+      visibility: hidden;
+      position: fixed;
+      inset-inline-start: calc(0.25rem * 0);
+      top: calc(0.25rem * 0);
+      z-index: 10;
+      grid-column-start: 1;
+      grid-row-start: 1;
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      grid-template-rows: repeat(1, minmax(0, 1fr));
+      align-items: flex-start;
+      justify-items: start;
+      overscroll-behavior: contain;
+      background-color: transparent;
+      opacity: 0%;
+      transition: opacity 0.2s ease-out 0.1s allow-discrete, visibility 0.3s ease-out 0.1s allow-discrete;
+      height: 100vh;
+      height: 100dvh;
+    }
+    .drawer-side > .drawer-overlay {
+      position: sticky;
+      top: calc(0.25rem * 0);
+      cursor: pointer;
+      place-self: stretch;
+      background-color: oklch(0% 0 0 / 40%);
+    }
+    .drawer-side > * {
+      grid-column-start: 1;
+      grid-row-start: 1;
+    }
+    .drawer-side > :not(.drawer-overlay) {
+      will-change: transform;
+      transition: translate 0.3s ease-out, width 0.2s ease-out;
+      translate: -100%;
+    }
+    [dir="rtl"] .drawer-side > :not(.drawer-overlay) {
+      translate: 100%;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .drawer-toggle {
+      position: fixed;
+      height: calc(0.25rem * 0);
+      width: calc(0.25rem * 0);
+      appearance: none;
+      opacity: 0%;
+    }
+    :where(.drawer-toggle:checked ~ .drawer-side) {
+      scrollbar-color: currentColor oklch(0 0 0 / calc(var(--page-has-backdrop, 0) * 0.4));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      :where(.drawer-toggle:checked ~ .drawer-side) {
+        scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) oklch(0 0 0 / calc(var(--page-has-backdrop, 0) * 0.4));
+      }
+    }
+    :where(:root:has(.drawer-toggle:checked)) {
+      --page-has-backdrop: 1;
+      --page-overflow: hidden;
+      --page-scroll-bg: var(--page-scroll-bg-on);
+      --page-scroll-gutter: stable;
+      --page-scroll-transition: var(--page-scroll-transition-on);
+      animation: set-page-has-scroll forwards;
+      animation-timeline: scroll();
+    }
+  }
+  @layer daisyui.l1.l2 {
+    :where(.drawer-toggle:checked ~ .drawer-side) {
+      pointer-events: auto;
+      visibility: visible;
+      overflow-y: auto;
+      opacity: 100%;
+    }
+    :where(.drawer-toggle:checked ~ .drawer-side) > :not(.drawer-overlay) {
+      translate: 0%;
+    }
+    .drawer-toggle:focus-visible ~ .drawer-content label.drawer-button {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     :where(.btn) {
       width: unset;
@@ -409,188 +499,235 @@
     }
   }
   @layer daisyui.l1.l2.l3 {
-    .select {
+    .input {
+      cursor: text;
       border: var(--border) solid #0000;
       position: relative;
       display: inline-flex;
       flex-shrink: 1;
       appearance: none;
       align-items: center;
-      gap: calc(0.25rem * 1.5);
+      gap: calc(0.25rem * 2);
       background-color: var(--color-base-100);
-      padding-inline-start: calc(0.25rem * 3);
-      padding-inline-end: calc(0.25rem * 7);
+      padding-inline: calc(0.25rem * 3);
       vertical-align: middle;
+      white-space: nowrap;
       width: clamp(3rem, 20rem, 100%);
       height: var(--size);
-      font-size: 0.875rem;
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
       touch-action: manipulation;
       border-start-start-radius: var(--join-ss, var(--radius-field));
       border-start-end-radius: var(--join-se, var(--radius-field));
       border-end-start-radius: var(--join-es, var(--radius-field));
       border-end-end-radius: var(--join-ee, var(--radius-field));
-      background-image: linear-gradient(45deg, #0000 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, #0000 50%);
-      background-position: calc(100% - 20px) calc(1px + 50%), calc(100% - 16.1px) calc(1px + 50%);
-      background-size: 4px 4px, 4px 4px;
-      background-repeat: no-repeat;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
       border-color: var(--input-color);
-      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
       --size: calc(var(--size-field, 0.25rem) * 10);
+      --input-color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select {
+      .input {
         box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
       }
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select {
+      .input {
         --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
       }
     }
-    [dir="rtl"] .select {
-      background-position: calc(0% + 12px) calc(1px + 50%), calc(0% + 16px) calc(1px + 50%);
+    .input:where(input) {
+      display: inline-flex;
     }
-    [dir="rtl"] .select::picker(select), [dir="rtl"] .select select::picker(select) {
-      translate: 0.5rem 0;
-    }
-    .select[multiple] {
-      height: auto;
-      overflow: auto;
-      padding-block: calc(0.25rem * 3);
-      padding-inline-end: calc(0.25rem * 3);
-      background-image: none;
-    }
-    .select select {
-      margin-inline-start: calc(0.25rem * -3);
-      margin-inline-end: calc(0.25rem * -7);
-      width: calc(100% + 2.75rem);
+    .input :where(input) {
+      display: inline-flex;
+      height: 100%;
+      width: 100%;
       appearance: none;
-      padding-inline-start: calc(0.25rem * 3);
-      padding-inline-end: calc(0.25rem * 7);
-      height: calc(100% - calc(var(--border) * 2));
-      align-items: center;
-      background: inherit;
-      border-radius: inherit;
-      border-style: none;
+      background-color: transparent;
+      border: none;
     }
-    .select select:focus, .select select:focus-within {
+    .input :where(input):focus, .input :where(input):focus-within {
       --tw-outline-style: none;
       outline-style: none;
     }
     @media (forced-colors: active) {
-      .select select:focus, .select select:focus-within {
+      .input :where(input):focus, .input :where(input):focus-within {
         outline: 2px solid transparent;
         outline-offset: 2px;
       }
     }
-    .select select:not(:last-child) {
-      margin-inline-end: calc(0.25rem * -5.5);
-      background-image: none;
+    .input :where(input[type="url"]), .input :where(input[type="email"]) {
+      direction: ltr;
     }
-    .select:focus, .select:focus-within {
+    .input :where(input[type="date"]) {
+      display: inline-flex;
+    }
+    .input:focus, .input:focus-within {
       --input-color: var(--color-base-content);
       box-shadow: 0 1px var(--input-color);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select:focus, .select:focus-within {
+      .input:focus, .input:focus-within {
         box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
       }
     }
-    .select:focus, .select:focus-within {
+    .input:focus, .input:focus-within {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
       isolation: isolate;
     }
-    .select:has(> select[disabled]), .select:is(:disabled, [disabled]), fieldset:disabled .select {
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .input:focus, .input:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .input:has(> input[disabled]), .input:is(:disabled, [disabled]), fieldset:disabled .input {
       cursor: not-allowed;
       border-color: var(--color-base-200);
       background-color: var(--color-base-200);
       color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select:has(> select[disabled]), .select:is(:disabled, [disabled]), fieldset:disabled .select {
+      .input:has(> input[disabled]), .input:is(:disabled, [disabled]), fieldset:disabled .input {
         color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
       }
     }
-    .select:has(> select[disabled])::placeholder, .select:is(:disabled, [disabled])::placeholder, fieldset:disabled .select::placeholder {
+    .input:has(> input[disabled])::placeholder, .input:is(:disabled, [disabled])::placeholder, fieldset:disabled .input::placeholder {
       color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select:has(> select[disabled])::placeholder, .select:is(:disabled, [disabled])::placeholder, fieldset:disabled .select::placeholder {
+      .input:has(> input[disabled])::placeholder, .input:is(:disabled, [disabled])::placeholder, fieldset:disabled .input::placeholder {
         color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
       }
     }
-    .select:has(> select[disabled]) > select[disabled] {
+    .input:has(> input[disabled]), .input:is(:disabled, [disabled]), fieldset:disabled .input {
+      box-shadow: none;
+    }
+    .input:has(> input[disabled]) > input[disabled] {
       cursor: not-allowed;
     }
-    @supports (appearance: base-select) {
-      .select, .select select {
-        appearance: base-select;
-      }
+    .input::-webkit-date-and-time-value {
+      text-align: inherit;
     }
-    @supports (appearance: base-select) {
-      .select::picker(select), .select select::picker(select) {
-        appearance: base-select;
-      }
+    .input[type="number"]::-webkit-inner-spin-button {
+      margin-block: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * -3);
     }
-    .select::picker(select), .select select::picker(select) {
-      color: inherit;
-      max-height: min(24rem, 70dvh);
-      margin-inline: 0.5rem;
-      translate: -0.5rem 0;
-      border: var(--border) solid var(--color-base-200);
-      margin-block: calc(0.25rem * 2);
-      border-radius: var(--radius-box);
-      padding: calc(0.25rem * 2);
-      background-color: inherit;
-      box-shadow: 0 2px calc(var(--depth) * 3px) -2px oklch(0% 0 0/0.2);
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / calc(var(--depth) * 0.1)), 0 8px 10px -6px rgb(0 0 0 / calc(var(--depth) * 0.1));
+    .input::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
     }
-    .select::picker-icon, .select select::picker-icon {
-      display: none;
+    .input:has(> input[type="date"]) :where(input[type="date"]) {
+      display: inline-flex;
+      webkit-appearance: none;
+      appearance: none;
     }
-    .select optgroup, .select select optgroup {
-      padding-top: 0.5em;
-    }
-    .select optgroup option:nth-child(1), .select select optgroup option:nth-child(1) {
-      margin-top: 0.5em;
-    }
-    .select option, .select select option {
-      border-radius: var(--radius-field);
-      padding-inline: calc(0.25rem * 3);
-      padding-block: calc(0.25rem * 1.5);
-      transition-property: color, background-color;
-      transition-duration: 0.2s;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-      white-space: normal;
-    }
-    .select option:not(:disabled):hover, .select option:not(:disabled):focus-visible, .select select option:not(:disabled):hover, .select select option:not(:disabled):focus-visible {
+    .input:has(> input[type="date"]) input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+      width: 1em;
+      height: 1em;
       cursor: pointer;
-      background-color: var(--color-base-content);
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .checkbox {
+      border: var(--border) solid var(--input-color, var(--color-base-content));
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+      cursor: pointer;
+      appearance: none;
+      border-radius: var(--radius-selector);
+      padding: calc(0.25rem * 1);
+      vertical-align: middle;
+      color: var(--color-base-content);
+      box-shadow: 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 0 #0000 inset, 0 0 #0000;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      --size: calc(var(--size-selector, 0.25rem) * 6);
+      width: var(--size);
+      height: var(--size);
+      background-size: auto, calc(var(--noise) * 100%);
+      background-image: none, var(--fx-noise);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .select option:not(:disabled):hover, .select option:not(:disabled):focus-visible, .select select option:not(:disabled):hover, .select select option:not(:disabled):focus-visible {
-        background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+      .checkbox {
+        border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
       }
     }
-    .select option:not(:disabled):hover, .select option:not(:disabled):focus-visible, .select select option:not(:disabled):hover, .select select option:not(:disabled):focus-visible {
-      --tw-outline-style: none;
-      outline-style: none;
+    .checkbox:before {
+      --tw-content: "";
+      content: var(--tw-content);
+      display: block;
+      width: 100%;
+      height: 100%;
+      rotate: 45deg;
+      background-color: currentcolor;
+      opacity: 0%;
+      transition: clip-path 0.3s, opacity 0.1s, rotate 0.3s, translate 0.3s;
+      transition-delay: 0.1s;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+      box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      font-size: 1rem;
+      line-height: 0.75;
+    }
+    .checkbox:focus-visible {
+      outline: 2px solid var(--input-color, currentColor);
+      outline-offset: 2px;
+    }
+    .checkbox:checked, .checkbox[aria-checked="true"] {
+      background-color: var(--input-color, #0000);
+      box-shadow: 0 0 #0000 inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1));
+    }
+    .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      opacity: 100%;
     }
     @media (forced-colors: active) {
-      .select option:not(:disabled):hover, .select option:not(:disabled):focus-visible, .select select option:not(:disabled):hover, .select select option:not(:disabled):focus-visible {
-        outline: 2px solid transparent;
-        outline-offset: 2px;
+      .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+        rotate: 0deg;
+        background-color: transparent;
+        --tw-content: "✔︎";
+        clip-path: none;
       }
     }
-    .select option:not(:disabled):active, .select select option:not(:disabled):active {
-      background-color: var(--color-neutral);
-      color: var(--color-neutral-content);
-      box-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--color-neutral);
+    @media print {
+      .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+        rotate: 0deg;
+        background-color: transparent;
+        --tw-content: "✔︎";
+        clip-path: none;
+      }
+    }
+    .checkbox:indeterminate {
+      background-color: var( --input-color, var(--color-base-content) );
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .checkbox:indeterminate {
+        background-color: var( --input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000) );
+      }
+    }
+    .checkbox:indeterminate:before {
+      rotate: 0deg;
+      opacity: 100%;
+      translate: 0 -35%;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 20%;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .drawer {
+      position: relative;
+      display: grid;
+      width: 100%;
+      grid-auto-columns: max-content auto;
     }
   }
   @layer daisyui.l1.l2.l3 {
@@ -661,6 +798,16 @@
       --toast-y: 0;
     }
   }
+  @layer daisyui.l1.l2.l3 {
+    .drawer-content {
+      grid-column-start: 2;
+      grid-row-start: 1;
+      min-width: calc(0.25rem * 0);
+    }
+  }
+  .float-right {
+    float: right;
+  }
   .container {
     width: 100%;
   }
@@ -694,6 +841,54 @@
   }
   .mx-auto {
     margin-inline: auto;
+  }
+  @layer daisyui.l1.l2.l3 {
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(0.25rem * 1.5);
+      white-space: nowrap;
+      color: currentcolor;
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .label {
+        color: color-mix(in oklab, currentcolor 60%, transparent);
+      }
+    }
+    .label:has(input) {
+      cursor: pointer;
+    }
+    .label:is(.input > *, .select > *) {
+      display: flex;
+      height: calc(100% - 0.5rem);
+      align-items: center;
+      padding-inline: calc(0.25rem * 3);
+      white-space: nowrap;
+      font-size: inherit;
+    }
+    .label:is(.input > *, .select > *):first-child {
+      margin-inline-start: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * 3);
+      border-inline-end: var(--border) solid currentColor;
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .label:is(.input > *, .select > *):first-child {
+        border-inline-end: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+    }
+    .label:is(.input > *, .select > *):last-child {
+      margin-inline-start: calc(0.25rem * 3);
+      margin-inline-end: calc(0.25rem * -3);
+      border-inline-start: var(--border) solid currentColor;
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .label:is(.input > *, .select > *):last-child {
+        border-inline-start: var(--border) solid color-mix(in oklab, currentColor 10%, #0000);
+      }
+    }
+  }
+  .mt-8 {
+    margin-top: calc(var(--spacing) * 8);
   }
   @layer daisyui.l1.l2.l3 {
     .badge {
@@ -780,17 +975,29 @@
   .flex {
     display: flex;
   }
+  .grid {
+    display: grid;
+  }
   .h-screen {
     height: 100vh;
-  }
-  .w-64 {
-    width: calc(var(--spacing) * 64);
   }
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
+  .max-w-20 {
+    max-width: calc(var(--spacing) * 20);
+  }
+  .max-w-80 {
+    max-width: calc(var(--spacing) * 80);
+  }
+  .max-w-200 {
+    max-width: calc(var(--spacing) * 200);
+  }
   .flex-1 {
     flex: 1;
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .flex-wrap {
     flex-wrap: wrap;
@@ -808,17 +1015,20 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .bg-base-200 {
+    background-color: var(--color-base-200);
+  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
+  }
+  .bg-orange-600 {
+    background-color: var(--color-orange-600);
   }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
   }
   .bg-zinc-50 {
     background-color: var(--color-zinc-50);
-  }
-  .bg-zinc-500 {
-    background-color: var(--color-zinc-500);
   }
   .bg-zinc-950 {
     background-color: var(--color-zinc-950);
@@ -857,6 +1067,68 @@
   .shadow-sm {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  @layer daisyui.l1 {
+    .btn-soft:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+      --btn-shadow: "";
+      --btn-fg: var(--btn-color, var(--color-base-content));
+      --btn-bg: var(--btn-color, var(--color-base-content));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .btn-soft:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+        --btn-bg: color-mix(
+        in oklab,
+        var(--btn-color, var(--color-base-content)) 8%,
+        var(--color-base-100)
+      );
+      }
+    }
+    .btn-soft:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+      --btn-border: var(--btn-color, var(--color-base-content));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .btn-soft:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+        --btn-border: color-mix(
+        in oklab,
+        var(--btn-color, var(--color-base-content)) 10%,
+        var(--color-base-100)
+      );
+      }
+    }
+    .btn-soft:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+      --btn-noise: none;
+    }
+    @media (hover: none) {
+      .btn-soft:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+        --btn-shadow: "";
+        --btn-fg: var(--btn-color, var(--color-base-content));
+        --btn-bg: var(--btn-color, var(--color-base-content));
+      }
+      @supports (color: color-mix(in lab, red, red)) {
+        .btn-soft:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+          --btn-bg: color-mix(
+          in oklab,
+          var(--btn-color, var(--color-base-content)) 8%,
+          var(--color-base-100)
+        );
+        }
+      }
+      .btn-soft:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+        --btn-border: var(--btn-color, var(--color-base-content));
+      }
+      @supports (color: color-mix(in lab, red, red)) {
+        .btn-soft:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+          --btn-border: color-mix(
+          in oklab,
+          var(--btn-color, var(--color-base-content)) 10%,
+          var(--color-base-100)
+        );
+        }
+      }
+      .btn-soft:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+        --btn-noise: none;
+      }
+    }
   }
   @layer daisyui.l1.l2.l3 {
     .btn-primary {
