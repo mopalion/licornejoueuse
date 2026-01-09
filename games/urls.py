@@ -4,9 +4,13 @@ from . import views
 
 urlpatterns = [
         path("", views.index, name="index"),
+        path("<int:page_number>/", views.index, name="numbered_index"),
         path("bois", views.index, {"game_type" : "wooden"}, name="wooden_index"),
+        path("bois/<int:page_number>/", views.index, {"game_type" : "wooden"}, name="numbered_wooden_index"),
         path("jdr", views.index, {"game_type" : "rpg"}, name="rpg_index"),
+        path("jdr/<int:page_number>/", views.index, {"game_type" : "rpg"}, name="numbered_rpg_index"),
         path("jouets", views.index, {"game_type" : "toys"}, name="toys_index"),
+        path("jouets/<int:page_number>/", views.index, {"game_type" : "toys"}, name="numbered_toys_index"),
         path("locations/", views.location_index, name="location_index"),
         path("locations/<str:name>/", views.location_detail, name="location_detail"),
         path("<int:number>/", views.detail, name="detail"),

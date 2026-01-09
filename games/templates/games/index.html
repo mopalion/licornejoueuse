@@ -1,26 +1,41 @@
 {% extends "games/main.html" %}
 {% block content %}
 	<h1>Liste de jeux de la Licorne Joueuse</h1>
-	{% if games %}
-      <div class="flex flex-wrap">
-      {% for game in games %}
-        <article class="card rounded-x1 shadow-sm bg-yellow-600 m-4 w-96">
-          <figure>
-            <img src="/{{ game.image }}"></img>
-          </figure>
-          <div class="card-body">
-            <h3 class=card-title"">{{ game.title }}</h3>
-            <p class="badge">n°{{ game.number }}</p>
-            <p class="badge">Age minimum : {{ game.age }}</p>
-            <p class="badge">Nb jetons : {{ game.token }}</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary"><a href="{% url 'detail' game.number %}">Pour en savoir plus</a></button>
+  <div class="drawer">
+    <input id="drawer-games" type="checkbox" class="drawer-toggle" />
+    <label for="drawer-games" class="btn btn-soft drawer-button">Filtrage</label>
+    {% if games %}
+        <section class="drawer-content flex flex-wrap">
+        {% for game in games %}
+          <article class="card rounded-x1 shadow-sm bg-yellow-600 m-4 w-96">
+            <figure>
+              <img src="/{{ game.image }}"></img>
+            </figure>
+            <div class="card-body">
+              <h3 class=card-title"">{{ game.title }}</h3>
+              <p class="badge">n°{{ game.number }}</p>
+              <p class="badge">Age minimum : {{ game.age }}</p>
+              <p class="badge">Nb jetons : {{ game.token }}</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary"><a href="{% url 'detail' game.number %}">Pour en savoir plus</a></button>
+              </div>
             </div>
-          </div>
-        </article>
-      {% endfor %}
-      </div>
-	{% else %}
-		<p>Vous n'avez pas de jeux</p>
-	{% endif %}
+          </article>
+        {% endfor %}
+        <p>{% if pagination.previous %}<a href="{% url path pagination.previous %}{{ parameters }}">{{ pagination.previous }}</a> << {% endif %}Page {{ pagination.number }}/{{ pagination.max }}{% if pagination.next %} >> <a href="{% url path pagination.next %}{{ parameters }}">{{ pagination.next }}</a>{% endif %}</p>
+        </section>
+    {% else %}
+    <section class="drawer-content">
+      <p>Vous n'avez pas de jeux</p>
+    </section>
+    {% endif %}
+    <aside class="drawer-side bg-yellow-600 max-w-80">
+      <h2>Filtres</h2>
+      <label for="drawer-games" aria-label="close sidebar" class="drawer-overlay"></label>
+      <form class="mt-8" action="{% url path pagination.number %}" method="get">
+        {{ filter_form}}
+        <input class="btn btn-soft" type="submit" value="Appliquer">
+      </form>
+    </aside>
+  </div>
 {% endblock %}
