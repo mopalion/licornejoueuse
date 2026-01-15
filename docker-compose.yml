@@ -1,0 +1,16 @@
+services:
+  gunicorn:
+    image: toto
+    ports:
+      - "8080:8080"
+    volumes:
+      - ${DATA_DIR}/static_data:/data
+    environment:
+      STATIC_URL: "http://localhost:8081"
+
+  nginx:
+    image: nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - ${DATA_DIR}/static:/usr/share/nginx/html
