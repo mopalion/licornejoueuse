@@ -8,7 +8,6 @@
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-orange-600: oklch(64.6% 0.222 41.116);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-zinc-50: oklch(98.5% 0 0);
@@ -805,9 +804,6 @@
       min-width: calc(0.25rem * 0);
     }
   }
-  .float-right {
-    float: right;
-  }
   .container {
     width: 100%;
   }
@@ -975,29 +971,17 @@
   .flex {
     display: flex;
   }
-  .grid {
-    display: grid;
-  }
   .h-screen {
     height: 100vh;
   }
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
-  .max-w-20 {
-    max-width: calc(var(--spacing) * 20);
-  }
   .max-w-80 {
     max-width: calc(var(--spacing) * 80);
   }
-  .max-w-200 {
-    max-width: calc(var(--spacing) * 200);
-  }
   .flex-1 {
     flex: 1;
-  }
-  .grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .flex-wrap {
     flex-wrap: wrap;
@@ -1015,14 +999,8 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-  .bg-base-200 {
-    background-color: var(--color-base-200);
-  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
-  }
-  .bg-orange-600 {
-    background-color: var(--color-orange-600);
   }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);

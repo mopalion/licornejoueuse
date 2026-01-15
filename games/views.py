@@ -15,6 +15,8 @@ def index(request, game_type="boardgame", page_number=1):
         filter_form = GameFilterForm(request.GET)
         if filter_form.is_valid():
             games_by_page  = int(filter_form.cleaned_data["games_by_page"])
+            if 'name' in filter_form.cleaned_data and filter_form.cleaned_data['name']:
+                games = Game.objects.filter(game_type=game_type, title__contains=filter_form.cleaned_data['name'])
             first_parameter = True
             for k,v in filter_form.cleaned_data.items():
                 if first_parameter:
@@ -29,7 +31,8 @@ def index(request, game_type="boardgame", page_number=1):
         filter_form = GameFilterForm()
     if 'games_by_page' not in locals():
         games_by_page = 9
-    games = Game.objects.filter(game_type=game_type).order_by("number")[:]
+    if 'games' not in locals():
+        games = Game.objects.filter(game_type=game_type).order_by("number")[:]
     pagination = Paginator(games, games_by_page)
     page = pagination.page(page_number)
 

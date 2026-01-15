@@ -6,3 +6,4 @@ class GameFilterForm(forms.Form):
         max_length=3,
         widget=forms.TextInput(attrs={"class": "input"})
     )
+    name = forms.CharField(label="Nom du jeu", max_length=200)
