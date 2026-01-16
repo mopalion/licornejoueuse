@@ -11,22 +11,33 @@ import requests
 
 from .models import Game,Location
 
-def index(request, game_type="boardgame", page_number=1):
-    parameters = ""
+def generate_parameters(parameters):
+    get_parameters = ""
+    first_parameter = True
+    for k,v in parameters.items():
+        if first_parameter:
+            get_parameters += "?"
+            first_parameter = False
+        else:
+            get_parameters += "&"
+        get_parameters += f"{k}={v}"
+    return get_parameters
+
+
+def index(request, game_type="boardgame"):
+    parameters = {}
+    if 'page' in request.GET:
+        page_number = int(request.GET["page"])
+    else:
+        page_number = 1
     if request.GET:
         filter_form = GameFilterForm(request.GET)
         if filter_form.is_valid():
             games_by_page  = int(filter_form.cleaned_data["games_by_page"])
             if 'name' in filter_form.cleaned_data and filter_form.cleaned_data['name']:
                 games = Game.objects.filter(game_type=game_type, title__contains=filter_form.cleaned_data['name'])
-            first_parameter = True
             for k,v in filter_form.cleaned_data.items():
-                if first_parameter:
-                    parameters += "?"
-                    first_parameter = False
-                else:
-                    parameters += "&"
-                parameters += f"{k}={v}"
+                parameters[k] = v
         else:
             filter_form = GameFilterForm()
     else:
@@ -40,24 +51,35 @@ def index(request, game_type="boardgame", page_number=1):
 
     match game_type:
         case "boardgame":
-            path = "numbered_index"
+            path = "index"
         case "wooden":
-            path = "numbered_wooden_index"
+            path = "wooden_index"
         case "rpg":
-            path = "numbered_rpg_index"
+            path = "rpg_index"
         case "toys":
-            path = "numbered_toys_index"
+            path = "toys_index"
+    if page.has_previous():
+        parameters["page"] = page.previous_page_number()
+        previous_parameters = generate_parameters(parameters)
+    else:
+        previous_parameters = None
+    if page.has_next():
+        parameters["page"] = page.next_page_number()
+        next_parameters = generate_parameters(parameters)
+    else:
+        next_parameters = None
     context = {
         "games" : page.object_list,
         "pagination" : {
             "previous": page.previous_page_number() if page.has_previous() else None,
+            "previous_parameters": previous_parameters,
             "next": page.next_page_number() if page.has_next() else None,
+            "next_parameters": next_parameters,
             "number": page_number,
             "max": pagination.num_pages,
         },
         "path" : path,
         "filter_form" : filter_form,
-        "parameters": parameters
     }
     return render(request, "games/index.html", context)
 
