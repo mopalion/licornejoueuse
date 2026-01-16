@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-&hxwq7^)-*xp)h5x(ge7j9#mqqdb8_p@3%oqsdg1i_-(a10&_3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["licorne.delaborde.fr"]
+ALLOWED_HOSTS = ["licorne.delaborde.fr", "localhost"]
 CSRF_TRUSTED_ORIGINS = ["https://licorne.delaborde.fr"]
 CSRF_ALLOWED_ORIGINS = ["https://licorne.delaborde.fr"]
 CORS_ORIGINS_WHITELIST = ["https://licorne.delaborde.fr"]
