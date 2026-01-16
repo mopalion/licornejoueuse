@@ -6,6 +6,8 @@ import csv
 import segno
 from datetime import datetime
 from .forms import GameFilterForm
+from os import makedirs
+import requests
 
 from .models import Game,Location
 
@@ -92,7 +94,16 @@ def delete_games():
         game.delete()
 
 def load_data(csvfilename):
-    local = Location.objects.all()[0]
+    locations = Location.objects.all()
+    if len(locations) == 0:
+        site = Location(name="Local")
+        site.save()
+    else:
+        site = locations[0]
+    r = requests.get("https://www.myludo.fr/img/jeux/1758963873/jpg/bd/29983.jpg", allow_redirects=True)
+    makedirs("medias/games_images", exist_ok=True)
+    with open("medias/games_images/spirit_island.jpg", "wb") as fd:
+        fd.write(r.content)
     with open(csvfilename) as csvfile:
         data = csv.DictReader(csvfile)
         for row in data:
@@ -113,13 +124,14 @@ def load_data(csvfilename):
                     details="",
                     add_date=datetime.strptime("01-01-1970" if row["Date d'entrée"] == "" else row["Date d'entrée"],"%d-%m-%Y"),
                     number=row["N° réf"],
-                    location=local,
+                    location=site,
                     state=row["Etat"],
                     age=0 if row["Âge"] == "" else row["Âge"],
                     theme=row["Thème"],
                     token=100 if row["Jeton(s)"] == "" else row["Jeton(s)"],
                     to_sold= True if row["A vendre?"] == "oui" else False,
                     game_type=game_type,
+                    image="medias/games_images/spirit_island.jpg"
                 )
                 game.save()
             except (ValueError, IntegrityError):
