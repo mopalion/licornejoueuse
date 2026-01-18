@@ -4,7 +4,7 @@
 {% if location.game_set.all %}
 <ul>
   {% for game in location.game_set.all %}
-  <li>{{ game.title }}</li>
+  <li>{{ game.name }}</li>
   {% endfor %}
 </ul>
 {% else %}

@@ -2,9 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.utils.text import slugify
 from django.db.utils import IntegrityError
-import csv
 import segno
-from datetime import datetime
 from .forms import GameFilterForm
 from os import makedirs
 import requests
@@ -35,7 +33,7 @@ def index(request, game_type="boardgame"):
         if filter_form.is_valid():
             games_by_page  = int(filter_form.cleaned_data["games_by_page"])
             if 'name' in filter_form.cleaned_data and filter_form.cleaned_data['name']:
-                games = Game.objects.filter(game_type=game_type, title__contains=filter_form.cleaned_data['name'])
+                games = Game.objects.filter(game_type=game_type, name__contains=filter_form.cleaned_data['name'])
             for k,v in filter_form.cleaned_data.items():
                 parameters[k] = v
         else:
@@ -101,8 +99,8 @@ def location_detail(request, name):
 
 def generate_qrcode(request, number):
     game = get_object_or_404(Game, number=number)
-    qrcode = segno.make(f"{game.title} - {game.number}")
-    filename = f"medias/qrcode/{slugify(game.title)}_{game.number}.png"
+    qrcode = segno.make(f"{game.name} - {game.number}")
+    filename = f"medias/qrcode/{slugify(game.name)}_{game.number}.png"
     qrcode.save(filename, scale=5, border=0)
     game.qrcode.name = filename
     game.save()
@@ -110,52 +108,3 @@ def generate_qrcode(request, number):
     return redirect("detail", number=game.number)
 
 
-def delete_games():
-    games = Game.objects.all()
-    for game in games:
-        game.delete()
-
-def load_data(csvfilename):
-    locations = Location.objects.all()
-    if len(locations) == 0:
-        site = Location(name="Local")
-        site.save()
-    else:
-        site = locations[0]
-    r = requests.get("https://www.myludo.fr/img/jeux/1758963873/jpg/bd/29983.jpg", allow_redirects=True)
-    makedirs("medias/games_images", exist_ok=True)
-    with open("medias/games_images/spirit_island.jpg", "wb") as fd:
-        fd.write(r.content)
-    with open(csvfilename) as csvfile:
-        data = csv.DictReader(csvfile)
-        for row in data:
-            match row["Thème"]:
-                case "Bois":
-                    game_type="wooden"
-                case "Bois - hors inventaire":
-                    game_type="wooden"
-                case "JDR":
-                    game_type="rpg"
-                case "jeu de rôle":
-                    game_type="rpg"
-                case _:
-                    game_type="boardgame"
-            try:
-                game = Game(
-                    title=row["Jeux"],
-                    details="",
-                    add_date=datetime.strptime("01-01-1970" if row["Date d'entrée"] == "" else row["Date d'entrée"],"%d-%m-%Y"),
-                    number=row["N° réf"],
-                    location=site,
-                    state=row["Etat"],
-                    age=0 if row["Âge"] == "" else row["Âge"],
-                    theme=row["Thème"],
-                    token=100 if row["Jeton(s)"] == "" else row["Jeton(s)"],
-                    to_sold= True if row["A vendre?"] == "oui" else False,
-                    game_type=game_type,
-                    image="medias/games_images/spirit_island.jpg"
-                )
-                game.save()
-            except (ValueError, IntegrityError):
-                print(row["Jeux"])
-                continue
