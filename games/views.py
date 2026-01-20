@@ -28,10 +28,12 @@ def index(request, game_type="boardgame"):
         page_number = int(request.GET["page"])
     else:
         page_number = 1
+    if 'games_by_page' in request.GET:
+        games_by_page  = int(request.GET["games_by_page"])
+
     if request.GET:
         filter_form = GameFilterForm(request.GET)
         if filter_form.is_valid():
-            games_by_page  = int(filter_form.cleaned_data["games_by_page"])
             if 'name' in filter_form.cleaned_data and filter_form.cleaned_data['name']:
                 games = Game.objects.filter(game_type=game_type, name__contains=filter_form.cleaned_data['name'])
             for k,v in filter_form.cleaned_data.items():
