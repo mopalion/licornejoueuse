@@ -3,3 +3,4 @@ django==6.0.0
 pillow==12.1.0
 segno==1.6.6
 django-tailwind[cookiecutter,honcho,reload]==4.4.2
+pytest-playwright==0.7.2
