@@ -1,4 +1,5 @@
 from django.db import models
+from .tools import generate_qrcode
 
 class Location(models.Model):
     name = models.CharField(max_length=100)
@@ -71,6 +72,10 @@ class Game(models.Model):
 
     def __str__(self):
         return f"{self.name}({self.number})"
+
+    def save(self, *args, **kwargs):
+        self.qrcode.name = generate_qrcode(self)
+        super().save(*args, **kwargs)
 
 class Comment(models.Model):
     text = models.TextField()

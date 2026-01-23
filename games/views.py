@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.utils.text import slugify
 from django.db.utils import IntegrityError
-import segno
 from .forms import GameFilterForm
 from os import makedirs
 import requests
+
 
 from .models import Game,Location
 
@@ -98,15 +97,3 @@ def location_detail(request, name):
     context["location"] = get_object_or_404(Location, name=name)
 
     return render(request, "games/location_detail.html", context)
-
-def generate_qrcode(request, number):
-    game = get_object_or_404(Game, number=number)
-    qrcode = segno.make(f"{game.name} - {game.number}")
-    filename = f"medias/qrcode/{slugify(game.name)}_{game.number}.png"
-    qrcode.save(filename, scale=5, border=0)
-    game.qrcode.name = filename
-    game.save()
-    context = {"game": game}
-    return redirect("detail", number=game.number)
-
-

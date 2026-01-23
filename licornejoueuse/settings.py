@@ -140,3 +140,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = "data/static/"
 
 TAILWIND_APP_NAME = "theme"
+
+DJANGO_HOST = getenv("DJANGO_HOST")
+if DJANGO_HOST is None:
+    DJANGO_HOST = "https://ludotheque.licornejoueuse.org"

@@ -10,5 +10,4 @@ urlpatterns = [
         path("locations/", views.location_index, name="location_index"),
         path("locations/<str:name>/", views.location_detail, name="location_detail"),
         path("<int:number>/", views.detail, name="detail"),
-        path("<int:number>/generate", views.generate_qrcode, name="generate_qrcode"),
         ]
