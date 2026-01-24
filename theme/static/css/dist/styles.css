@@ -965,6 +965,15 @@
       gap: calc(0.25rem * 2);
     }
   }
+  @layer daisyui.l1.l2.l3 {
+    .mask {
+      display: inline-block;
+      vertical-align: middle;
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
+  }
   .block {
     display: block;
   }

@@ -4,6 +4,8 @@ from django.db.utils import IntegrityError
 from .forms import GameFilterForm
 from os import makedirs
 import requests
+from .tools import generate_qrcode
+from PIL import Image, ImageDraw, ImageFont
 
 
 from .models import Game,Location
@@ -97,3 +99,20 @@ def location_detail(request, name):
     context["location"] = get_object_or_404(Location, name=name)
 
     return render(request, "games/location_detail.html", context)
+
+def toto():
+    toto = [4,9,42,471,792,829,2222]
+    games = []
+    images = []
+    for nb in toto:
+        game = Game.objects.filter(number=nb)[0]
+        games.append(game)
+        filename = generate_qrcode(game)
+        img = Image.open(filename)
+        rgb = Image.new('RGB', img.size, (255,255,255))
+        rgb.paste(img, mask=img.split()[3])
+        images.append(rgb)
+    images[0].save("toto.pdf", 'PDF', resolution=100.00, save_all=True, append_images=images[1:])
+
+
+
