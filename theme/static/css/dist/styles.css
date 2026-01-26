@@ -1091,6 +1091,9 @@
   .m-4 {
     margin: calc(var(--spacing) * 4);
   }
+  .m-auto {
+    margin: auto;
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -1141,6 +1144,12 @@
   }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
+  }
+  .mr-2 {
+    margin-right: calc(var(--spacing) * 2);
+  }
+  .mr-4 {
+    margin-right: calc(var(--spacing) * 4);
   }
   @layer daisyui.l1.l2.l3 {
     .badge {
@@ -1230,8 +1239,14 @@
   .flex {
     display: flex;
   }
+  .grid {
+    display: grid;
+  }
   .hidden {
     display: none;
+  }
+  .inline {
+    display: inline;
   }
   .h-screen {
     height: 100vh;
@@ -1239,11 +1254,17 @@
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
+  .w-full {
+    width: 100%;
+  }
   .max-w-80 {
     max-width: calc(var(--spacing) * 80);
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-none {
+    flex: none;
   }
   @layer daisyui.l1.l2.l3 {
     .link {
@@ -1265,8 +1286,14 @@
       outline-offset: 2px;
     }
   }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .flex-wrap {
     flex-wrap: wrap;
+  }
+  .content-center {
+    align-content: center;
   }
   .items-center {
     align-items: center;
@@ -1305,6 +1332,9 @@
   }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
+  }
+  .text-center {
+    text-align: center;
   }
   .font-serif {
     font-family: var(--font-serif);

@@ -33,6 +33,14 @@
             </ul>
         </details>
     </ul>
+    {% if not request.user.is_authenticated %}
+    <button class="flex-1"><a href="{% url 'login' %}"><span class="material-icons text-base mr-2">shelves</span>Se connecter</a></button>
+    {% else %}
+      <form action="{% url 'logout' %}" method="post" class="flex-1">
+        {% csrf_token %}
+        <button type="submit" class="w-full"><span class="text-base material-icons mr-2">logout</span>Se déconnecter</button>
+      </form>
+    {% endif %}
 	</nav>
   {% block content %}
   {% endblock %}
