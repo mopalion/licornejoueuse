@@ -69,7 +69,7 @@ ROOT_URLCONF = 'licornejoueuse.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['licornejoueuse/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
