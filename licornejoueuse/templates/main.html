@@ -4,7 +4,6 @@
 <head>
 	<meta charset="utf-8">
 	<title>Licorne Joueuse</title>
-  <!-- <link href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" rel="stylesheet"> -->
   {% tailwind_css %}
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons&icon_names=login,logout,shelves" rel="stylesheet">
   <style type="text/css">
@@ -35,11 +34,7 @@
         </details>
     </ul>
 	</nav>
-    {% block content %}
-    {% endblock %}
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/2.3.5/js/dataTables.min.js"></script>
-  {% block javascript %}
+  {% block content %}
   {% endblock %}
   <footer>
   <hr>
