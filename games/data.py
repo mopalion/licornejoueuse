@@ -161,47 +161,48 @@ def get_game(row, site, à_vendre):
         name=row["Jeux"],
         details=row["description"],
         games_library_categorization=row["Classification ludothèque COL"],
-        adapted_games_library_categorization=row["COL adapté"],
+        adapted_games_library_categorization_1=row["COL adapté 1"],
+        adapted_games_library_categorization_2=row["COL adapté 2"],
         time=row["Duree"],
         players_number=row["Nbre de joueurs"],
-        add_date=cast_date(row["Date d'entrée"]),
+        entry_year=cast_date(row["Date d'entrée"]).year,
         price=float(row["Prix neuf"].replace(",",".")),
         number=row["N° réf"],
         location=site,
-        state=row["Etat"],
         cards_number=row["Nbre de cartes"] if row["Nbre de cartes"] != "" else 0,
         cards_size=row["Dimension cartes"],
         origin=row["don provenance?"],
-        trictrac_link=row["trictrac"],
-        year=row["annee"] if row["annee"] != "" else 0,
-        editor=row["editeur"],
+        year=row["annee de sortie"] if row["annee de sortie"] != "" else 0,
         age=0 if row["Âge"] == "" else row["Âge"],
         theme=row["Thème"],
-        token=100 if row["Jeton(s)"] == "" else row["Jeton(s)"],
         game_type=game_type,
         last_inventory_date=cast_date(row["dernier inventaire"]),
         rules_video_link=row["liens vers video régles"],
-        image="medias/games_images/spirit_island.jpg"
+        for_child=True if row["Enfants / Adultes"] == "Enfants" else False,
+        missing_items=row["Manque"],
+        inventory=row["Inventaire"],
     )
     game.save()
     if row["A vendre?"] == "oui":
         game.labels.add(à_vendre)
     if row["illustrateur"] != "":
-        illustrators = Illustrator.objects.filter(name=row["illustrateur"])
-        if not illustrators:
-            illustrator = Illustrator(name=row["illustrateur"])
-            illustrator.save()
-        else:
-            illustrator = illustrators[0]
-        game.illustrators.add(illustrator)
+        for illustrator_name in row["illustrateur"].split(","):
+            illustrators = Illustrator.objects.filter(name=illustrator_name.strip())
+            if not illustrators:
+                illustrator = Illustrator(name=illustrator_name.strip())
+                illustrator.save()
+            else:
+                illustrator = illustrators[0]
+            game.illustrators.add(illustrator)
     if row["auteur"] != "":
-        authors = Author.objects.filter(name=row["auteur"])
-        if not authors:
-            author = Author(name=row["auteur"])
-            author.save()
-        else:
-            author = authors[0]
-        game.authors.add(author)
+        for author_name in row["auteur"].split(","):
+            authors = Author.objects.filter(name=author_name.strip())
+            if not authors:
+                author = Author(name=author_name.strip())
+                author.save()
+            else:
+                author = authors[0]
+            game.authors.add(author)
     if row["mécanisme"] != "":
         for mechanism_name in row["mécanisme"].split(","):
             mechanisms = Mechanism.objects.filter(name=mechanism_name.split())
@@ -215,13 +216,11 @@ def get_game(row, site, à_vendre):
         game.comment_set.create(text=row["Commentaires"], created_date=cast_date(""))
     if row["Manque"] != "":
         game.comment_set.create(text="MANQUE: "+row["Commentaires"], created_date=cast_date(""))
-    if row["Inventaire"] != "":
-        game.comment_set.create(text="INVENTAIRE: "+row["Commentaires"], created_date=cast_date(""))
 
 def load_data(csvfilename):
-    locations = Location.objects.all()
+    locations = Location.objects.filter(name="Inconnu")
     if len(locations) == 0:
-        site = Location(name="Local")
+        site = Location(name="Inconnu")
         site.save()
     else:
         site = locations[0]
@@ -233,14 +232,7 @@ def load_data(csvfilename):
         à_vendre = labels[0]
 
 
-    total_games = 869
-    current_games = 0
-    partial_games = 0
     error_games = []
-    r = requests.get("https://www.myludo.fr/img/jeux/1758963873/jpg/bd/29983.jpg", allow_redirects=True)
-    makedirs("medias/games_images", exist_ok=True)
-    with open("medias/games_images/spirit_island.jpg", "wb") as fd:
-        fd.write(r.content)
     with open(csvfilename) as csvfile:
         data = csv.DictReader(csvfile)
         for row in data:
@@ -248,15 +240,16 @@ def load_data(csvfilename):
                 get_game(row, site, à_vendre)
             except (ValueError, IntegrityError, ValidationError, TypeError) as e:
                 print(row["Jeux"])
-                error_games.append(row["Jeux"])
-                print(e)
+                error_games.append((row["N° réf"], row["Jeux"], e))
                 continue
-            current_games += 1
-    partial = len(Game.objects.all()) - current_games
-    print(f"Jeux ok : {current_games}")
-    print(f"Jeux partiel ok : {partial}")
-    print(f"Jeux en erreurs : {len(error_games)}")
-    print(f"Pourcentage de réussite : {current_games*100/total_games}")
+        with open("errors.txt", "w") as fd:
+            for number, name, exception in error_games:
+                fd.write("********************\n")
+                fd.write(str(number))
+                fd.write("\n")
+                fd.write(name + "\n")
+                fd.write(str(exception))
+                fd.write("\n")
 
 def complete_data(label=None, remove_label = False):
     environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
