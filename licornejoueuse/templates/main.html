@@ -33,6 +33,18 @@
             </ul>
         </details>
     </ul>
+    {% if request.user.is_authenticated %}
+    <ul class="menu menu-horizontal px-1 flex-1">
+      <li>
+        <details>
+          <summary><span class="material-icons text-base">shelves</span>Inventaire</summary>
+            <ul class="bg-base-100 rounded-t-none p-2 z-50">
+              <li><a href="{% url 'generate_game_csv' %}">Jeux - CSV</a></li>
+              <li><a href="{% url 'generate_comment_csv' %}">Commentaires - CSV</a></li>
+            </ul>
+        </details>
+    </ul>
+    {% endif %}
     {% if not request.user.is_authenticated %}
     <button class="flex-1"><a href="{% url 'login' %}"><span class="material-icons text-base mr-2">shelves</span>Se connecter</a></button>
     {% else %}

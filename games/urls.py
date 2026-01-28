@@ -11,4 +11,6 @@ urlpatterns = [
         path("locations/<str:name>/", views.location_detail, name="location_detail"),
         path("<int:number>/", views.detail, name="detail"),
         path("<int:number>/generate", views.generate_qrcode, name="generate_qrcode"),
+        path("inventory/game_csv", views.generate_game_csv, name="generate_game_csv"),
+        path("inventory/comment_csv", views.generate_comment_csv, name="generate_comment_csv"),
         ]
