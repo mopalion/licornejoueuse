@@ -1,4 +1,5 @@
 from django.db import models
+from io import StringIO
 
 class Location(models.Model):
     name = models.CharField(max_length=100)
@@ -35,6 +36,14 @@ class Label(models.Model):
 
     def __str__(self):
         return f"{self.label}"
+
+def csv_sanitize(value):
+    if type(value) == type(True):
+        if value == True:
+            value = "oui"
+        else:
+            value = "non"
+    return f"\"{str(value)}\""
 
 class Game(models.Model):
     name = models.CharField(max_length=200, blank=False)
@@ -74,7 +83,37 @@ class Game(models.Model):
     def __str__(self):
         return f"{self.name}({self.number})"
 
+    def csv_data(self):
+        labels = ",".join([x.label for x in self.labels.all()])
+        illustrators = ",".join([x.name for x in self.illustrators.all()])
+        authors = ",".join([x.name for x in self.authors.all()])
+        editors = ",".join([x.name for x in self.editors.all()])
+        mechanisms = ",".join([x.name for x in self.mechanisms.all()])
+        return f"{csv_sanitize(self.number)};{csv_sanitize(self.name)};{csv_sanitize(self.game_type)};{csv_sanitize(self.price)};{csv_sanitize(self.location.name)};{csv_sanitize(self.age)};{csv_sanitize(labels)};{csv_sanitize(self.for_child)};{csv_sanitize(self.games_library_categorization)};{csv_sanitize(self.adapted_games_library_categorization_1)};{csv_sanitize(self.adapted_games_library_categorization_2)};{csv_sanitize(self.time)};{csv_sanitize(self.players_number)};{csv_sanitize(self.details)};{csv_sanitize(self.entry_year)};{csv_sanitize(self.year)};{csv_sanitize(self.myludo_path)};{csv_sanitize(self.cards_number)};{csv_sanitize(self.cards_size)};{csv_sanitize(self.origin)};{csv_sanitize(self.last_inventory_date.strftime('%d/%m/%y'))};{csv_sanitize(self.rules_video_link)};{csv_sanitize(self.missing_items)};{csv_sanitize(self.inventory)};{csv_sanitize(illustrators)};{csv_sanitize(authors)};{csv_sanitize(mechanisms)};{csv_sanitize(editors)}"
+
+    @classmethod
+    def extract_data(cls):
+        res = StringIO()
+        res.write("numéro;nom;type;prix;localisation;ages;labels;pour enfant;col;col_adapté1;col_adapté2;durée;nombre de joueurs;description;année d’obtention;année de sortie;lien myludo;nombre de cartes;taille des cartes;origine;date d’inventaire;vidéo règle;pièces manquantes;inventaire;illustrateurs;auteurs;mécanismes;éditeurs\n")
+        for game in cls.objects.all():
+            res.write(game.csv_data())
+            res.write("\n")
+        return res
+
+
 class Comment(models.Model):
     text = models.TextField()
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     created_date = models.DateTimeField()
+
+    def csv_data(self):
+        return f"{csv_sanitize(self.game.number)};{csv_sanitize(self.created_date.strftime('%d/%m/%y'))};{csv_sanitize(self.text)}"
+
+    @classmethod
+    def extract_data(cls):
+        res = StringIO()
+        res.write("numéro du jeux;date de création;texte\n")
+        for game in cls.objects.all():
+            res.write(game.csv_data())
+            res.write("\n")
+        return res

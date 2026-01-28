@@ -2,12 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.utils.text import slugify
 from django.db.utils import IntegrityError
+from django.http import HttpResponse
 import segno
 from .forms import GameFilterForm
 from os import makedirs
 import requests
 
-from .models import Game,Location
+from .models import Game,Location, Comment
 
 def generate_parameters(parameters):
     get_parameters = ""
@@ -109,4 +110,28 @@ def generate_qrcode(request, number):
     context = {"game": game}
     return redirect("detail", number=game.number)
 
+def generate_game_csv(request):
+    file = Game.extract_data()
+    file.seek(0)
+    
+    response = HttpResponse(
+        file,
+        content_type="text/csv",
+        headers={
+            "Content-Disposition": 'attachment; filename="licorne_game_data.csv"'
+        } 
+    )
+    return response
 
+def generate_comment_csv(request):
+    file = Comment.extract_data()
+    file.seek(0)
+    
+    response = HttpResponse(
+        file,
+        content_type="text/csv",
+        headers={
+            "Content-Disposition": 'attachment; filename="licorne_comment_data.csv"'
+        } 
+    )
+    return response
