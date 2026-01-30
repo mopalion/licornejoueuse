@@ -1,0 +1,98 @@
+{% extends "main.html" %}
+{% block content %}
+<form action="{% url 'inventory_index' %}" method="post" class="text-zinc-800">
+  {% csrf_token %}
+  <input name="selected_games" type="hidden" value="{{ selected_games | join:',' }}" />
+<h1>Inventaire des jeux de la Licorne</h1>
+<div class="flex flex-row">
+  <aside class="drawer basis-auto grow">
+    <input id="drawer-filtre" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content">
+      <label for="drawer-filtre" class="btn btn-outline drawer-button w-95 m-2 border-orange-500 border-2">Filtrage</label>
+    </div>
+    <div class="drawer-side bg-orange-300">
+      <label for="drawer-filtre" aria-labl="close sidebar" class="drawer-overlay"></label>
+      <div>
+      {{ filter_form.as_p }}
+      <input type="submit" value="Filtrer" class="btn">
+      </div>
+    </div>
+  </aside>
+  <aside class="drawer drawer-end basis-auto grow justify-end">
+    <input id="drawer-action" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content">
+      <label for="drawer-action" class="btn btn-outline drawer-button w-95 m-2 border-orange-500 border-2">Actions</label>
+    </div>
+    <div class="drawer-side bg-orange-300">
+      <label for="drawer-action" aria-labl="close sidebar" class="drawer-overlay"></label>
+      <div class="">
+        <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
+        <br>
+        <input type="submit" value="Go" class="btn m-2">
+      </div>
+    </div>
+  </aside>
+</div>
+{% if selected_games_to_display %}
+<div class="flex justify-center">
+<section class="collapse">
+  <input type="checkbox" />
+  <div class="collapse-title btn btn-outline w-55 m-auto border-orange-500 border-2">Jeux sélectionnés filtrés</div>
+  <div class="collapse-content">
+    <table class="table">
+      <thead>
+        <tr class="text-zinc-500">
+          <th></th>
+          <th>Numéro</th>
+          <th>Nom</th>
+          <th>Localisation</th>
+          <th>Année de sortie</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for game in selected_games_to_display %}
+        <tr>
+          <td><input name="selected-game-{{ game.number }}" checked type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
+          <td>{{ game.number }}</td>
+          <td>{{ game.name }}</td>
+          <td>{{ game.location }}</td>
+          <td>{{ game.year }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+</div>
+{% endif %}
+<section class="overflow-x-auto text-zinc-800">
+  <table class="table table-zebra">
+    <thead>
+      <tr class="text-zinc-500">
+        <th></th>
+        <th>Numéro</th>
+        <th>Nom</th>
+        <th>Localisation</th>
+        <th>Année de sortie</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for game in games %}
+      <tr>
+        <td><input name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
+        <td>{{ game.number }}</td>
+        <td>{{ game.name }}</td>
+        <td>{{ game.location }}</td>
+        <td>{{ game.year }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not games %}
+    <div role="alert" class="alert alert-error w-80 m-auto mb-2">
+      <p class=""><span class="material-icons text-base">crisis_alert</span>Aucun jeux n’est ressorti du filtrage.</p>
+    </div>
+  {% endif %}
+</section>
+</form>
+{% endblock %}

@@ -39,6 +39,7 @@
         <details>
           <summary><span class="material-icons text-base">shelves</span>Inventaire</summary>
             <ul class="bg-base-100 rounded-t-none p-2 z-50">
+              <li><a href="{% url 'inventory_index' %}">Liste</a></li>
               <li><a href="{% url 'generate_game_csv' %}">Jeux - CSV</a></li>
               <li><a href="{% url 'generate_comment_csv' %}">Commentaires - CSV</a></li>
             </ul>
