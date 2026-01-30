@@ -142,7 +142,7 @@ def cast_date(string):
     if string != "":
         date_res = datetime.strptime(string.strip().replace(" ","-").replace("/","-").replace(".","-"),"%d-%m-%Y")
     else:
-        date_res = datetime.strptime("01-01-1970","%d-%m-%Y")
+        date_res = ""
     return date_res
 
 def get_game(row, site, à_vendre):
@@ -165,23 +165,26 @@ def get_game(row, site, à_vendre):
         adapted_games_library_categorization_2=row["COL adapté 2"],
         time=row["Duree"],
         players_number=row["Nbre de joueurs"],
-        entry_year=cast_date(row["Date d'entrée"]).year,
         price=float(row["Prix neuf"].replace(",",".")),
         number=row["N° réf"],
         location=site,
         cards_number=row["Nbre de cartes"] if row["Nbre de cartes"] != "" else 0,
         cards_size=row["Dimension cartes"],
         origin=row["don provenance?"],
-        year=row["annee de sortie"] if row["annee de sortie"] != "" else 0,
         age=0 if row["Âge"] == "" else row["Âge"],
         theme=row["Thème"],
         game_type=game_type,
-        last_inventory_date=cast_date(row["dernier inventaire"]),
         rules_video_link=row["liens vers video régles"],
         for_child=True if row["Enfants / Adultes"] == "Enfants" else False,
         missing_items=row["Manque"],
         inventory=row["Inventaire"],
     )
+    if row["Date d'entrée"].strip() != "":
+        game.entry_year=cast_date(row["Date d'entrée"]).year
+    if row["dernier inventaire"].strip() != "":
+        game.last_inventory_date=cast_date(row["dernier inventaire"])
+    if row["annee de sortie"].strip() != "":
+        game.year=row["annee de sortie"]
     game.save()
     if row["A vendre?"] == "oui":
         game.labels.add(à_vendre)
@@ -213,9 +216,9 @@ def get_game(row, site, à_vendre):
                 mechanism = mechanisms[0]
             game.mechanisms.add(mechanism)
     if row["Commentaires"] != "":
-        game.comment_set.create(text=row["Commentaires"], created_date=cast_date(""))
+        game.comment_set.create(text=row["Commentaires"], created_date=cast_date("01/01/1970"))
     if row["Manque"] != "":
-        game.comment_set.create(text="MANQUE: "+row["Manque"], created_date=cast_date(""))
+        game.comment_set.create(text="MANQUE: "+row["Manque"], created_date=cast_date("01/01/1970"))
 
 def load_data(csvfilename):
     locations = Location.objects.filter(name="Inconnu")

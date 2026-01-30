@@ -1,5 +1,6 @@
 from django.db import models
 from io import StringIO
+from datetime import date
 
 class Location(models.Model):
     name = models.CharField(max_length=100)
@@ -43,6 +44,8 @@ def csv_sanitize(value):
             value = "oui"
         else:
             value = "non"
+    elif type(value) == type(date.today()):
+        value = value.strftime('%d/%m/%y')
     return f"\"{str(value)}\""
 
 class Game(models.Model):
@@ -53,7 +56,7 @@ class Game(models.Model):
     time = models.CharField(max_length=10, blank=True)
     players_number = models.CharField(max_length=10, blank=True)
     details = models.TextField(blank=True)
-    entry_year = models.PositiveIntegerField()
+    entry_year = models.PositiveIntegerField(blank=False, null=False)
     number = models.PositiveIntegerField("Number", blank=False, unique=True)
     price = models.FloatField(blank=True, null=True)
     year = models.PositiveIntegerField(blank=True, null=True)
@@ -89,7 +92,7 @@ class Game(models.Model):
         authors = ",".join([x.name for x in self.authors.all()])
         editors = ",".join([x.name for x in self.editors.all()])
         mechanisms = ",".join([x.name for x in self.mechanisms.all()])
-        return f"{csv_sanitize(self.number)};{csv_sanitize(self.name)};{csv_sanitize(self.game_type)};{csv_sanitize(self.price)};{csv_sanitize(self.location.name)};{csv_sanitize(self.age)};{csv_sanitize(labels)};{csv_sanitize(self.for_child)};{csv_sanitize(self.games_library_categorization)};{csv_sanitize(self.adapted_games_library_categorization_1)};{csv_sanitize(self.adapted_games_library_categorization_2)};{csv_sanitize(self.time)};{csv_sanitize(self.players_number)};{csv_sanitize(self.details)};{csv_sanitize(self.entry_year)};{csv_sanitize(self.year)};{csv_sanitize(self.myludo_path)};{csv_sanitize(self.cards_number)};{csv_sanitize(self.cards_size)};{csv_sanitize(self.origin)};{csv_sanitize(self.last_inventory_date.strftime('%d/%m/%y'))};{csv_sanitize(self.rules_video_link)};{csv_sanitize(self.missing_items)};{csv_sanitize(self.inventory)};{csv_sanitize(illustrators)};{csv_sanitize(authors)};{csv_sanitize(mechanisms)};{csv_sanitize(editors)}"
+        return f"{csv_sanitize(self.number)};{csv_sanitize(self.name)};{csv_sanitize(self.game_type)};{csv_sanitize(self.price)};{csv_sanitize(self.location.name)};{csv_sanitize(self.age)};{csv_sanitize(labels)};{csv_sanitize(self.for_child)};{csv_sanitize(self.games_library_categorization)};{csv_sanitize(self.adapted_games_library_categorization_1)};{csv_sanitize(self.adapted_games_library_categorization_2)};{csv_sanitize(self.time)};{csv_sanitize(self.players_number)};{csv_sanitize(self.details)};{csv_sanitize(self.entry_year)};{csv_sanitize(self.year)};{csv_sanitize(self.myludo_path)};{csv_sanitize(self.cards_number)};{csv_sanitize(self.cards_size)};{csv_sanitize(self.origin)};{csv_sanitize(self.last_inventory_date)};{csv_sanitize(self.rules_video_link)};{csv_sanitize(self.missing_items)};{csv_sanitize(self.inventory)};{csv_sanitize(illustrators)};{csv_sanitize(authors)};{csv_sanitize(mechanisms)};{csv_sanitize(editors)}"
 
     @classmethod
     def extract_data(cls):
@@ -107,7 +110,7 @@ class Comment(models.Model):
     created_date = models.DateTimeField()
 
     def csv_data(self):
-        return f"{csv_sanitize(self.game.number)};{csv_sanitize(self.created_date.strftime('%d/%m/%y'))};{csv_sanitize(self.text)}"
+        return f"{csv_sanitize(self.game.number)};{csv_sanitize(self.created_date)};{csv_sanitize(self.text)}"
 
     @classmethod
     def extract_data(cls):
