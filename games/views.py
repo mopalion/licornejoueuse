@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.utils.text import slugify
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -8,6 +7,8 @@ import segno
 from .forms import GameFilterForm,InventoryFilterForm, BatchForm
 from os import makedirs
 import requests
+from .tools import generate_label_sheets
+from PIL import Image, ImageDraw, ImageFont
 
 from .models import Game,Location, Comment, Label
 
@@ -101,16 +102,6 @@ def location_detail(request, name):
 
     return render(request, "games/location_detail.html", context)
 
-def generate_qrcode(request, number):
-    game = get_object_or_404(Game, number=number)
-    qrcode = segno.make(f"{game.name} - {game.number}")
-    filename = f"medias/qrcode/{slugify(game.name)}_{game.number}.png"
-    qrcode.save(filename, scale=5, border=0)
-    game.qrcode.name = filename
-    game.save()
-    context = {"game": game}
-    return redirect("detail", number=game.number)
-
 def generate_game_csv(request):
     file = Game.extract_data()
     file.seek(0)
@@ -152,6 +143,8 @@ def inventory_index(request):
             match request.POST["actions"]:
                 case "batch":
                     return batch(request)
+                case "print_labels":
+                    return print_labels(request)
     return select_games(request)
 
 @login_required
@@ -187,6 +180,37 @@ def batch(request):
         "selected_games_ids": map(lambda x: x.number, games),
         "form": form,
     }
+    return render(request, "games/batch.html", context)
+    
+@login_required
+def print_labels(request):
+    """
+    Create pdf with labels of each selected games.
+
+    Args:
+        request: Django Request object.
+    Returns:
+        the pdf file to print selected games’s labels.
+    """
+    selected_games = []
+    for selected_game in filter(lambda x: x[0].startswith("selected-game-") and "on" in x[1], request.POST.items()):
+        selected_games.append(int(selected_game[0].replace("selected-game-","")))
+    if selected_games == []:
+        return redirect("inventory_index")
+
+    games = Game.objects.filter(number__in=selected_games)
+
+    pdf = generate_label_sheets(games)
+    pdf.seek(0)
+    
+    response = HttpResponse(
+        pdf,
+        content_type="application/pdf",
+        headers={
+            "Content-Disposition": 'attachment; filename="etiquettes_licorne.pdf"'
+        } 
+    )
+    return response
     return render(request, "games/batch.html", context)
     
 def select_games(request):

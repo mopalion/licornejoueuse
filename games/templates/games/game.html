@@ -12,10 +12,6 @@
 	Le jeu se trouve à {{ game.location }}.
 	</p>
 	<p>
-	{% if game.qrcode %}
 	Image : <img src="/{{ game.qrcode }}"></img>
-	{% else %}
-	<a href="{% url 'generate_qrcode' game.number %}">Génération qrcode</a>
-	{% endif %}
 	</p>
 {% endblock %}

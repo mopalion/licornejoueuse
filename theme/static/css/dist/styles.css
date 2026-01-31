@@ -9,7 +9,6 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-orange-300: oklch(83.7% 0.128 66.29);
-    --color-orange-400: oklch(75% 0.183 55.934);
     --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-pink-100: oklch(94.8% 0.028 342.258);
@@ -1718,9 +1717,6 @@
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
-  .mb-5 {
-    margin-bottom: calc(var(--spacing) * 5);
-  }
   @layer daisyui.l1.l2.l3 {
     .badge {
       display: inline-flex;
@@ -1818,14 +1814,8 @@
   .h-screen {
     height: 100vh;
   }
-  .w-50 {
-    width: calc(var(--spacing) * 50);
-  }
   .w-55 {
     width: calc(var(--spacing) * 55);
-  }
-  .w-70 {
-    width: calc(var(--spacing) * 70);
   }
   .w-80 {
     width: calc(var(--spacing) * 80);
@@ -1893,17 +1883,9 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
-  .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
-  }
-  .border-4 {
-    border-style: var(--tw-border-style);
-    border-width: 4px;
   }
   .border-orange-500 {
     border-color: var(--color-orange-500);
@@ -1929,9 +1911,6 @@
   }
   .bg-orange-300 {
     background-color: var(--color-orange-300);
-  }
-  .bg-orange-400 {
-    background-color: var(--color-orange-400);
   }
   .bg-pink-100 {
     background-color: var(--color-pink-100);
@@ -2005,9 +1984,6 @@
   .shadow-sm {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .outline-zinc-500 {
-    outline-color: var(--color-zinc-500);
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
@@ -2096,12 +2072,6 @@
     .btn-primary {
       --btn-color: var(--color-primary);
       --btn-fg: var(--color-primary-content);
-    }
-  }
-  @layer daisyui.l1.l2.l3 {
-    .btn-warning {
-      --btn-color: var(--color-warning);
-      --btn-fg: var(--color-warning-content);
     }
   }
   .checked\:bg-orange-500:checked {
