@@ -39,6 +39,12 @@ class Label(models.Model):
     def __str__(self):
         return f"{self.label}"
 
+class Theme(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name}"
+
 def csv_sanitize(value):
     if type(value) == type(True):
         if value == True:
@@ -68,7 +74,6 @@ class Game(models.Model):
     qrcode = models.ImageField(upload_to="medias/qrcode", blank=True)
     image = models.ImageField(upload_to="medias/games_images", blank=True)
     age = models.CharField(max_length=10)
-    theme = models.CharField(max_length=30, blank=True) 
     game_type = models.CharField(max_length=20, default="boardgame", choices=[("boardgame","jds"), ("rpg","jdr"), ("wooden", "bois"), ("toys", "jouet")])
     last_inventory_date = models.DateField("last inventory date", blank=True, null=True)
     rules_video_link = models.CharField(max_length=100, blank=True, null=True)
@@ -83,6 +88,7 @@ class Game(models.Model):
     mechanisms = models.ManyToManyField(Mechanism, blank=True)
     editors = models.ManyToManyField(Editor, blank=True)
     labels = models.ManyToManyField(Label, blank=True)
+    themes = models.ManyToManyField(Theme, blank=True)
 
     def __str__(self):
         return f"{self.name}({self.number})"

@@ -1,6 +1,6 @@
 import csv
 from datetime import datetime, date
-from .models import Game, Location, Label, Author, Illustrator, Mechanism, Comment, Editor
+from .models import Game, Location, Label, Author, Illustrator, Mechanism, Comment, Editor, Theme
 import requests
 from os import makedirs
 from os import environ
@@ -172,7 +172,6 @@ def get_game(row, site, à_vendre):
         cards_size=row["Dimension cartes"],
         origin=row["don provenance?"],
         age=0 if row["Âge"] == "" else row["Âge"],
-        theme=row["Thème"],
         game_type=game_type,
         rules_video_link=row["liens vers video régles"],
         for_child=True if row["Enfants / Adultes"] == "Enfants" else False,
@@ -188,6 +187,15 @@ def get_game(row, site, à_vendre):
     game.save()
     if row["A vendre?"] == "oui":
         game.labels.add(à_vendre)
+    if row["Thème"] != "":
+        for theme_name in row["Thème"].split(","):
+            themes = Theme.objects.filter(name=theme_name.strip())  
+            if not themes:
+                theme = Theme(name=theme_name.strip())
+                theme.save()
+            else:
+                theme = themes[0]
+            game.themes.add(theme)
     if row["illustrateur"] != "":
         for illustrator_name in row["illustrateur"].split(","):
             illustrators = Illustrator.objects.filter(name=illustrator_name.strip())
@@ -279,7 +287,14 @@ def complete_data(label=None, remove_label = False):
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]
         game.time = infos["time"]
-        game.theme = ",".join(infos["themes"])
+        for theme_name in infos["themes"]:
+            themes = Theme.objects.filter(name=theme_name)
+            if len(themes) != 0:
+                theme = themes[0]
+            else:
+                theme = theme(name=theme_name)
+                theme.save()
+            game.themes.add(theme)
         for mechanism_name in infos["mechanisms"]:
             mechanisms = Mechanism.objects.filter(name=mechanism_name)
             if len(mechanisms) != 0:
