@@ -137,6 +137,21 @@ def delete_games():
     games = Game.objects.all()
     for game in games:
         game.delete()
+    themes = Theme.objects.all()
+    for theme in themes:
+        theme.delete()
+    mechanisms = Mechanism.objects.all()
+    for mechanism in mechanisms:
+        mechanism.delete()
+    authors = Author.objects.all()
+    for author in authors:
+        author.delete()
+    editors = Editor.objects.all()
+    for editor in editors:
+        editor.delete()
+    illustrators = Illustrator.objects.all()
+    for illustrator in illustrators:
+        illustrator.delete()
 
 def cast_date(string):
     if string != "":
@@ -189,9 +204,9 @@ def get_game(row, site, à_vendre):
         game.labels.add(à_vendre)
     if row["Thème"] != "":
         for theme_name in row["Thème"].split(","):
-            themes = Theme.objects.filter(name=theme_name.strip())  
+            themes = Theme.objects.filter(name=theme_name.strip().lower())  
             if not themes:
-                theme = Theme(name=theme_name.strip())
+                theme = Theme(name=theme_name.strip().lower())
                 theme.save()
             else:
                 theme = themes[0]
@@ -216,9 +231,9 @@ def get_game(row, site, à_vendre):
             game.authors.add(author)
     if row["mécanisme"] != "":
         for mechanism_name in row["mécanisme"].split(","):
-            mechanisms = Mechanism.objects.filter(name=mechanism_name.split())
+            mechanisms = Mechanism.objects.filter(name=mechanism_name.strip().lower())
             if not mechanisms:
-                mechanism = Mechanism(name=mechanism_name.split())
+                mechanism = Mechanism(name=mechanism_name.strip().lower())
                 mechanism.save()
             else:
                 mechanism = mechanisms[0]
