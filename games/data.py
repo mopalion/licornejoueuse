@@ -176,8 +176,8 @@ def get_game(row, site, à_vendre):
         name=row["Jeux"],
         details=row["description"],
         games_library_categorization=row["Classification ludothèque COL"],
-        adapted_games_library_categorization_1=row["COL adapté 1"],
-        adapted_games_library_categorization_2=row["COL adapté 2"],
+        adapted_games_library_categorization_1=row["COL adapté 1"].lower(),
+        adapted_games_library_categorization_2=row["COL adapté 2"].lower(),
         time=row["Duree"],
         players_number=row["Nbre de joueurs"],
         price=float(row["Prix neuf"].replace(",",".")),
@@ -294,10 +294,10 @@ def complete_data(label=None, remove_label = False):
         print("suite du début")
 
         r = requests.get(infos["img"], allow_redirects=True)
-        makedirs("medias/games_images", exist_ok=True)
-        with open(f"medias/games_images/{game.name}.jpg", "wb") as fd:
+        makedirs("{settings.MEDIA_ROOT}/games_images", exist_ok=True)
+        with open(f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg", "wb") as fd:
             fd.write(r.content)
-        game.image = f"medias/games_images/{game.name}.jpg"
+        game.image = f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg"
         game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]

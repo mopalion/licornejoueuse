@@ -8,22 +8,32 @@
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-orange-200: oklch(90.1% 0.076 70.697);
     --color-orange-300: oklch(83.7% 0.128 66.29);
+    --color-orange-400: oklch(75% 0.183 55.934);
     --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-blue-100: oklch(93.2% 0.032 255.585);
+    --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-pink-100: oklch(94.8% 0.028 342.258);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-zinc-50: oklch(98.5% 0 0);
     --color-zinc-100: oklch(96.7% 0.001 286.375);
     --color-zinc-500: oklch(55.2% 0.016 285.938);
     --color-zinc-800: oklch(27.4% 0.006 286.033);
+    --color-zinc-900: oklch(21% 0.006 285.885);
     --color-zinc-950: oklch(14.1% 0.005 285.823);
     --color-black: #000;
     --spacing: 0.25rem;
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
     --text-base: 1rem;
     --text-base--line-height: calc(1.5 / 1);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
     --text-5xl: 3rem;
     --text-5xl--line-height: 1;
+    --font-weight-black: 900;
     --tracking-normal: 0em;
     --leading-normal: 1.5;
     --default-font-family: var(--font-sans);
@@ -228,6 +238,92 @@
     }
     [dir="rtl"] .drawer-side > :not(.drawer-overlay) {
       translate: 100%;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .fab {
+      pointer-events: none;
+      position: fixed;
+      inset-inline-end: calc(0.25rem * 4);
+      bottom: calc(0.25rem * 4);
+      z-index: 999;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-end;
+      gap: calc(0.25rem * 2);
+      font-size: var(--text-sm);
+      line-height: var(--tw-leading, var(--text-sm--line-height));
+      white-space: nowrap;
+    }
+    .fab > * {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: calc(0.25rem * 2);
+    }
+    .fab > *:hover, .fab > *:has(:focus-visible) {
+      z-index: 1;
+    }
+    .fab > [tabindex]:first-child {
+      position: relative;
+      display: grid;
+      transition-property: opacity, visibility, rotate;
+      transition-duration: 0.2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .fab .fab-close {
+      position: absolute;
+      inset-inline-end: calc(0.25rem * 0);
+      bottom: calc(0.25rem * 0);
+    }
+    .fab .fab-main-action {
+      position: absolute;
+      inset-inline-end: calc(0.25rem * 0);
+      bottom: calc(0.25rem * 0);
+    }
+    .fab:focus-within:has(.fab-close) > [tabindex], .fab:focus-within:has(.fab-main-action) > [tabindex] {
+      rotate: 90deg;
+      opacity: 0%;
+    }
+    .fab:focus-within > [tabindex]:first-child {
+      pointer-events: none;
+    }
+    .fab:focus-within > :nth-child(n + 2) {
+      visibility: visible;
+      --tw-scale-x: 100%;
+      --tw-scale-y: 100%;
+      --tw-scale-z: 100%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+      opacity: 100%;
+    }
+    .fab > :nth-child(n + 2) {
+      visibility: hidden;
+      --tw-scale-x: 80%;
+      --tw-scale-y: 80%;
+      --tw-scale-z: 80%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+      opacity: 0%;
+      transition-property: opacity, scale, visibility;
+      transition-duration: 0.2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .fab > :nth-child(n + 2).fab-main-action, .fab > :nth-child(n + 2).fab-close {
+      --tw-scale-x: 100%;
+      --tw-scale-y: 100%;
+      --tw-scale-z: 100%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+    .fab > :nth-child(3) {
+      transition-delay: 30ms;
+    }
+    .fab > :nth-child(4) {
+      transition-delay: 60ms;
+    }
+    .fab > :nth-child(5) {
+      transition-delay: 90ms;
+    }
+    .fab > :nth-child(6) {
+      transition-delay: 120ms;
     }
   }
   @layer daisyui.l1.l2.l3 {
@@ -1551,6 +1647,235 @@
       --toast-y: 0;
     }
   }
+  @layer daisyui.l1.l2.l3 {
+    .file-input {
+      cursor: pointer;
+      cursor: pointer;
+      border: var(--border) solid #0000;
+      display: inline-flex;
+      appearance: none;
+      align-items: center;
+      background-color: var(--color-base-100);
+      vertical-align: middle;
+      webkit-user-select: none;
+      user-select: none;
+      width: clamp(3rem, 20rem, 100%);
+      height: var(--size);
+      padding-inline-end: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 2;
+      border-start-start-radius: var(--join-ss, var(--radius-field));
+      border-start-end-radius: var(--join-se, var(--radius-field));
+      border-end-start-radius: var(--join-es, var(--radius-field));
+      border-end-end-radius: var(--join-ee, var(--radius-field));
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .file-input::file-selector-button {
+      margin-inline-end: calc(0.25rem * 4);
+      cursor: pointer;
+      padding-inline: calc(0.25rem * 4);
+      webkit-user-select: none;
+      user-select: none;
+      height: calc(100% + var(--border) * 2);
+      margin-block: calc(var(--border) * -1);
+      margin-inline-start: calc(var(--border) * -1);
+      font-size: 0.875rem;
+      color: var(--btn-fg);
+      border-width: var(--border);
+      border-style: solid;
+      border-color: var(--btn-border);
+      border-start-start-radius: calc(var(--join-ss, var(--radius-field) - var(--border)));
+      border-end-start-radius: calc(var(--join-es, var(--radius-field) - var(--border)));
+      font-weight: 600;
+      background-color: var(--btn-bg);
+      background-size: calc(var(--noise) * 100%);
+      background-image: var(--btn-noise);
+      text-shadow: 0 0.5px oklch(1 0 0 / calc(var(--depth) * 0.15));
+      box-shadow: 0 0.5px 0 0.5px white inset, var(--btn-shadow);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input::file-selector-button {
+        box-shadow: 0 0.5px 0 0.5px color-mix( in oklab, color-mix(in oklab, white 30%, var(--btn-bg)) calc(var(--depth) * 20%), #0000 ) inset, var(--btn-shadow);
+      }
+    }
+    .file-input::file-selector-button {
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --btn-bg: var(--btn-color, var(--color-base-200));
+      --btn-fg: var(--color-base-content);
+      --btn-border: var(--btn-bg);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input::file-selector-button {
+        --btn-border: color-mix(in oklab, var(--btn-bg), #000 5%);
+      }
+    }
+    .file-input::file-selector-button {
+      --btn-shadow: 0 3px 2px -2px var(--btn-bg),
+        0 4px 3px -2px var(--btn-bg);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input::file-selector-button {
+        --btn-shadow: 0 3px 2px -2px color-mix(in oklab, var(--btn-bg) 30%, #0000),
+        0 4px 3px -2px color-mix(in oklab, var(--btn-bg) 30%, #0000);
+      }
+    }
+    .file-input::file-selector-button {
+      --btn-noise: var(--fx-noise);
+    }
+    .file-input:focus {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input:focus {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) 10%, #0000);
+      }
+    }
+    .file-input:focus {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    .file-input:has(> input[disabled]), .file-input:is(:disabled, [disabled]) {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+    }
+    .file-input:has(> input[disabled])::placeholder, .file-input:is(:disabled, [disabled])::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input:has(> input[disabled])::placeholder, .file-input:is(:disabled, [disabled])::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .file-input:has(> input[disabled]), .file-input:is(:disabled, [disabled]) {
+      box-shadow: none;
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input:has(> input[disabled]), .file-input:is(:disabled, [disabled]) {
+        color: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .file-input:has(> input[disabled])::file-selector-button, .file-input:is(:disabled, [disabled])::file-selector-button {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      --btn-border: #0000;
+      --btn-noise: none;
+      --btn-fg: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .file-input:has(> input[disabled])::file-selector-button, .file-input:is(:disabled, [disabled])::file-selector-button {
+        --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      }
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .textarea {
+      border: var(--border) solid #0000;
+      min-height: calc(0.25rem * 20);
+      flex-shrink: 1;
+      appearance: none;
+      border-radius: var(--radius-field);
+      background-color: var(--color-base-100);
+      padding-block: calc(0.25rem * 2);
+      vertical-align: middle;
+      width: clamp(3rem, 20rem, 100%);
+      padding-inline-start: 0.75rem;
+      padding-inline-end: 0.75rem;
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
+      touch-action: manipulation;
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .textarea {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .textarea {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .textarea textarea {
+      appearance: none;
+      background-color: transparent;
+      border: none;
+    }
+    .textarea textarea:focus, .textarea textarea:focus-within {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .textarea textarea:focus, .textarea textarea:focus-within {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .textarea:focus, .textarea:focus-within {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .textarea:focus, .textarea:focus-within {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
+      }
+    }
+    .textarea:focus, .textarea:focus-within {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .textarea:focus, .textarea:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .textarea:has(> textarea[disabled]), .textarea:is(:disabled, [disabled]) {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .textarea:has(> textarea[disabled]), .textarea:is(:disabled, [disabled]) {
+        color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+      }
+    }
+    .textarea:has(> textarea[disabled])::placeholder, .textarea:is(:disabled, [disabled])::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .textarea:has(> textarea[disabled])::placeholder, .textarea:is(:disabled, [disabled])::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .textarea:has(> textarea[disabled]), .textarea:is(:disabled, [disabled]) {
+      box-shadow: none;
+    }
+    .textarea:has(> textarea[disabled]) > textarea[disabled] {
+      cursor: not-allowed;
+    }
+  }
   .z-50 {
     z-index: 50;
   }
@@ -1609,6 +1934,9 @@
     .container {
       max-width: 96rem;
     }
+  }
+  .m-1 {
+    margin: calc(var(--spacing) * 1);
   }
   .m-2 {
     margin: calc(var(--spacing) * 2);
@@ -1708,11 +2036,26 @@
       }
     }
   }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
   }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
+  }
+  @layer daisyui.l1.l2.l3 {
+    .fieldset-legend {
+      margin-bottom: calc(0.25rem * -1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(0.25rem * 2);
+      padding-block: calc(0.25rem * 2);
+      color: var(--color-base-content);
+      font-weight: 600;
+    }
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
@@ -1789,6 +2132,16 @@
     }
   }
   @layer daisyui.l1.l2.l3 {
+    .fieldset {
+      display: grid;
+      gap: calc(0.25rem * 1.5);
+      padding-block: calc(0.25rem * 1);
+      font-size: 0.75rem;
+      grid-template-columns: 1fr;
+      grid-auto-rows: max-content;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
     .card-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1814,8 +2167,23 @@
   .h-screen {
     height: 100vh;
   }
+  .w-19 {
+    width: calc(var(--spacing) * 19);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
+  }
+  .w-30 {
+    width: calc(var(--spacing) * 30);
+  }
+  .w-45 {
+    width: calc(var(--spacing) * 45);
+  }
   .w-55 {
     width: calc(var(--spacing) * 55);
+  }
+  .w-75 {
+    width: calc(var(--spacing) * 75);
   }
   .w-80 {
     width: calc(var(--spacing) * 80);
@@ -1826,6 +2194,9 @@
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
+  .w-190 {
+    width: calc(var(--spacing) * 190);
+  }
   .w-full {
     width: 100%;
   }
@@ -1834,6 +2205,9 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-auto {
+    flex: auto;
   }
   .grow {
     flex-grow: 1;
@@ -1867,6 +2241,9 @@
   .flex-wrap {
     flex-wrap: wrap;
   }
+  .place-content-around {
+    place-content: space-around;
+  }
   .items-center {
     align-items: center;
   }
@@ -1887,6 +2264,12 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-blue-200 {
+    border-color: var(--color-blue-200);
+  }
+  .border-orange-400 {
+    border-color: var(--color-orange-400);
+  }
   .border-orange-500 {
     border-color: var(--color-orange-500);
   }
@@ -1906,8 +2289,14 @@
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
+  .bg-blue-100 {
+    background-color: var(--color-blue-100);
+  }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
+  }
+  .bg-orange-200 {
+    background-color: var(--color-orange-200);
   }
   .bg-orange-300 {
     background-color: var(--color-orange-300);
@@ -1920,6 +2309,9 @@
   }
   .bg-zinc-50 {
     background-color: var(--color-zinc-50);
+  }
+  .bg-zinc-900 {
+    background-color: var(--color-zinc-900);
   }
   .bg-zinc-950 {
     background-color: var(--color-zinc-950);
@@ -1941,9 +2333,17 @@
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
   }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
   .leading-normal {
     --tw-leading: var(--leading-normal);
     line-height: var(--leading-normal);
+  }
+  .font-black {
+    --tw-font-weight: var(--font-weight-black);
+    font-weight: var(--font-weight-black);
   }
   .tracking-normal {
     --tw-tracking: var(--tracking-normal);
@@ -1961,6 +2361,13 @@
       color: var(--color-info-content);
       --alert-border-color: var(--color-info);
       --alert-color: var(--color-info);
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .alert-success {
+      color: var(--color-success-content);
+      --alert-border-color: var(--color-success);
+      --alert-color: var(--color-success);
     }
   }
   .text-black {
@@ -2072,6 +2479,12 @@
     .btn-primary {
       --btn-color: var(--color-primary);
       --btn-fg: var(--color-primary-content);
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .btn-warning {
+      --btn-color: var(--color-warning);
+      --btn-fg: var(--color-warning-content);
     }
   }
   .checked\:bg-orange-500:checked {
@@ -2342,6 +2755,10 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-tracking {
   syntax: "*";
   inherits: false;
@@ -2469,6 +2886,7 @@
     *, ::before, ::after, ::backdrop {
       --tw-border-style: solid;
       --tw-leading: initial;
+      --tw-font-weight: initial;
       --tw-tracking: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;

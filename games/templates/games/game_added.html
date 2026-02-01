@@ -1,0 +1,7 @@
+{% extends "main.html" %}
+{% block content %}
+<div role="alert" class="alert alert-success m-2"
+<h1>Le jeu {{ game.name }} a bien été rajouté (numéro {{ game.number }}).</h1>
+</div>
+<a href="{% url 'inventory_index' %}" class="block"><button class="btn m-auto block btn-warning">Retour à l’inventaire</button></a>
+{% endblock %}

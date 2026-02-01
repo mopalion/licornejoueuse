@@ -1,4 +1,4 @@
-{% load static tailwind_tags %}
+{% load tailwind_tags static %}
 <!doctype html>
 <html lang="fr">	
 <head>
@@ -22,7 +22,7 @@
       <li>
         <details>
           <summary><span class="material-icons text-base">shelves</span>Catalogue</summary>
-            <ul class="bg-base-100 rounded-t-none p-2 z-50">
+            <ul class="bg-base-100 rounded-t-none p-2 z-50 bg-zinc-900">
               <li><a href="{% url 'index' %}">Jeux de société</a></li>
               <li><a href="{% url 'wooden_index' %}">Jeux en bois</a></li>
               <li><a href="{% url 'rpg_index' %}">Jeux de rôle</a></li>
@@ -38,7 +38,7 @@
       <li>
         <details>
           <summary><span class="material-icons text-base">view_list</span>Inventaire</summary>
-            <ul class="bg-base-100 rounded-t-none p-2 z-50">
+            <ul class="bg-base-100 rounded-t-none p-2 z-50 bg-zinc-900">
               <li><a href="{% url 'inventory_index' %}">Liste</a></li>
               <li><a href="{% url 'generate_game_csv' %}">Jeux - CSV</a></li>
               <li><a href="{% url 'generate_comment_csv' %}">Commentaires - CSV</a></li>
