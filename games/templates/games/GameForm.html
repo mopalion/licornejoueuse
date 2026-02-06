@@ -1,0 +1,167 @@
+<h1>{{ form.name }}</h1>
+<div>
+  {% for error in form.errors.items %}
+    <div role="alert" class="alert alert-error m-2">
+      <p>Champ {{ error.1.0 }}</p>
+      <ul>
+      {% for message in error.1.1 %}
+      <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+</div>
+<div class="border-orange-400 border-2 m-1">
+  <div class="flex flex-wrap">
+    <div class="flex-1">
+      <label class="input m-1 w-45">
+        <span class="label w-20">Numéro</span>
+        {{ form.number }}
+      </label>
+      <br>
+      <label class="input m-1 w-45">
+        <span class="label w-19">Lieu</span>
+        {{ form.location }}
+      </label>
+      <br>
+      <label class="input m-1 w-45">
+        <span class="label w-19">Type</span>
+        {{ form.game_type }}
+      </label>
+      <br>
+      <label class="input m-1 w-55">
+        <span class="label w-30">Origine</span>
+        {{ form.origin }}
+      </label>
+    </div>
+    <div class="flex-1">
+      <label class="input m-1 w-55">
+        <span class="label w-190">Prix</span>
+        {{ form.price }}
+        <span class="label">€</span>
+      </label>
+      <br>
+      <label class="input m-1 w-55">
+        <span class="label w-30">Date d’obtention</span>
+        {{ form.entry_year }}
+      </label>
+      <br>
+      <label class="input m-1 w-55">
+        <span class="">Pour enfants</span>
+        {{ form.for_child }}
+      </label>
+      <br>
+      <label class="input m-1 w-55">
+        <span class="">Dernier inventaire</span>
+        {{ form.last_inventory_date }}
+      </label>
+    </div>
+    <div class="flex-1 border-blue-200 bg-blue-100 border-2 p-2 m-2">
+      {{ form.labels }}
+    </div>
+
+  </div>
+  <div class="flex flex-wrap">
+    <div>
+      <label class="input m-1">
+        <span class="label w-75">https://www.myludo.fr/</span>
+        {{ form.myludo_path }}
+      </label>
+      <br>
+      <label class="input m-1">
+        <span class="label w-75">Lien règle vidéo</span>
+        {{ form.rules_video_link }}
+      </label>
+    </div>
+    <div>
+      <label>Image :
+      {{ form.image }}
+      </label>
+    </div>
+  </div>
+</div>
+<div class="flex flex-wrap">
+  <div class="flex-1">
+    <label class="input m-1 w-45">
+      <span class="label w-19">Durée</span>
+      {{ form.time }}
+      <span class="label">min</span>
+    </label>
+    <br>
+    <label class="input m-1 w-45">
+      <span class="label w-19">Nb joueurs</span>
+      {{ form.players_number }}
+    </label>
+    <br>
+    <label class="input m-1 w-45">
+      <span class="label w-19">Âge</span>
+      {{ form.age }}
+    </label>
+  </div>
+  <div class="flex-1">
+    <label class="input m-1 w-45">
+      <span class="label w-19">Nb cartes</span>
+      {{ form.cards_number }}
+    </label>
+    <br>
+    <label class="input m-1 w-45">
+      <span class="label w-19">Taille cartes</span>
+      {{ form.cards_size }}
+    </label>
+    <br>
+    <label class="input m-1 w-45">
+      <span class="label w-19">Année de sortie</span>
+      {{ form.year }}
+    </label>
+  </div>
+</div>
+<div class="flex flex-wrap">
+  <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
+    <legend class="fieldset-legend">Thèmes</legend>
+    {{ form.themes }}
+  </fieldset>
+  <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
+    <legend class="fieldset-legend">Mécanismes</legend>
+    {{ form.mechanisms }}
+  </fieldset>
+</div>
+<div class="flex flex-wrap">
+  <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
+    <legend class="fieldset-legend">Auteurs</legend>
+    {{ form.authors }}
+  </fieldset>
+  <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
+    <legend class="fieldset-legend">Illustrateurs</legend>
+    {{ form.illustrators }}
+  </fieldset>
+  <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
+    <legend class="fieldset-legend">Éditeurs</legend>
+    {{ form.editors }}
+  </fieldset>
+</div>
+<fieldset class="fieldset m-2">
+  <legend class="fieldset-legend">Description</legend>
+  {{ form.details }}
+</fieldset>
+<fieldset class="fieldset m-2">
+  <legend class="fieldset-legend">Inventaire</legend>
+  {{ form.inventory }}
+</fieldset>
+<fieldset class="fieldset m-2">
+  <legend class="fieldset-legend">Pièces manquantes</legend>
+  {{ form.missing_items }}
+</fieldset>
+<div class="flex flex-wrap bg-orange-200 m-2 place-content-around">
+  <div class="m-auto w-20 flex-auto p-2">
+    <label>Classification d’objets ludiques</label><br>
+    {{ form.games_library_categorization }}
+  </div>
+  <div class="m-auto w-20 flex-auto p-2">
+    <label>Adapté 1</label><br>
+      {{ form.adapted_games_library_categorization_1 }}
+  </div>
+  <div class="m-auto w-20 flex-auto p-2">
+    <label>Adapté 2</label><br>
+      {{ form.adapted_games_library_categorization_2 }}
+  </div>
+</div>

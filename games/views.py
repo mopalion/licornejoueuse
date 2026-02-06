@@ -3,8 +3,9 @@ from django.core.paginator import Paginator
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 import segno
-from .forms import GameFilterForm,InventoryFilterForm, BatchForm
+from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
@@ -285,3 +286,50 @@ def select_games(request):
         "current_selected_games": current_selected_games,
     }
     return render(request, "games/inventory_index.html", context)
+
+@login_required
+def update_game(request, number):
+    """
+    Allow user to update a game. Update game if post data was sent.
+
+    Args:
+        request: Django Request object.
+        int: number of the game to edit
+    Returns:
+        the form to edit the game.
+    """
+    game = Game.objects.get(number=number)
+    errors = []
+    if request.method == "POST":
+        form = GameForm(request.POST, request.FILES, instance=game)
+        if form.is_valid():
+                
+            form.save()
+            return redirect("game_added", game.number)
+        else:
+            for error in form.errors.items():
+                detailed_error = (form.fields[error[0]].label, error[1])
+                form.errors[error[0]] = detailed_error
+    else:
+        form = GameForm(instance=Game.objects.get(number=number))
+    context = {
+        "game": game,
+        "form": form,
+        "errors": errors,
+    }
+    return render(request, "games/update_game.html", context)
+
+@login_required
+def game_added(request, number):
+    """
+    Display that a game was modified/added.
+
+    Args:
+        request: Django Request object.
+        int: Number of the game that was added or updated.
+    Returns:
+        The confirmation of the upgrade.
+    """
+
+    game = Game.objects.get(number=number)
+    return render(request, "games/game_added.html", {"game": game})

@@ -1,6 +1,6 @@
 import csv
 from datetime import datetime, date
-from .models import Game, Location, Label, Author, Illustrator, Mechanism, Comment, Editor
+from .models import Game, Location, Label, Author, Illustrator, Mechanism, Comment, Editor, Theme
 import requests
 from os import makedirs
 from os import environ
@@ -137,6 +137,21 @@ def delete_games():
     games = Game.objects.all()
     for game in games:
         game.delete()
+    themes = Theme.objects.all()
+    for theme in themes:
+        theme.delete()
+    mechanisms = Mechanism.objects.all()
+    for mechanism in mechanisms:
+        mechanism.delete()
+    authors = Author.objects.all()
+    for author in authors:
+        author.delete()
+    editors = Editor.objects.all()
+    for editor in editors:
+        editor.delete()
+    illustrators = Illustrator.objects.all()
+    for illustrator in illustrators:
+        illustrator.delete()
 
 def cast_date(string):
     if string != "":
@@ -161,8 +176,8 @@ def get_game(row, site, à_vendre):
         name=row["Jeux"],
         details=row["description"],
         games_library_categorization=row["Classification ludothèque COL"],
-        adapted_games_library_categorization_1=row["COL adapté 1"],
-        adapted_games_library_categorization_2=row["COL adapté 2"],
+        adapted_games_library_categorization_1=row["COL adapté 1"].lower(),
+        adapted_games_library_categorization_2=row["COL adapté 2"].lower(),
         time=row["Duree"],
         players_number=row["Nbre de joueurs"],
         price=float(row["Prix neuf"].replace(",",".")),
@@ -172,7 +187,6 @@ def get_game(row, site, à_vendre):
         cards_size=row["Dimension cartes"],
         origin=row["don provenance?"],
         age=0 if row["Âge"] == "" else row["Âge"],
-        theme=row["Thème"],
         game_type=game_type,
         rules_video_link=row["liens vers video régles"],
         for_child=True if row["Enfants / Adultes"] == "Enfants" else False,
@@ -188,6 +202,15 @@ def get_game(row, site, à_vendre):
     game.save()
     if row["A vendre?"] == "oui":
         game.labels.add(à_vendre)
+    if row["Thème"] != "":
+        for theme_name in row["Thème"].split(","):
+            themes = Theme.objects.filter(name=theme_name.strip().lower())  
+            if not themes:
+                theme = Theme(name=theme_name.strip().lower())
+                theme.save()
+            else:
+                theme = themes[0]
+            game.themes.add(theme)
     if row["illustrateur"] != "":
         for illustrator_name in row["illustrateur"].split(","):
             illustrators = Illustrator.objects.filter(name=illustrator_name.strip())
@@ -208,9 +231,9 @@ def get_game(row, site, à_vendre):
             game.authors.add(author)
     if row["mécanisme"] != "":
         for mechanism_name in row["mécanisme"].split(","):
-            mechanisms = Mechanism.objects.filter(name=mechanism_name.split())
+            mechanisms = Mechanism.objects.filter(name=mechanism_name.strip().lower())
             if not mechanisms:
-                mechanism = Mechanism(name=mechanism_name.split())
+                mechanism = Mechanism(name=mechanism_name.strip().lower())
                 mechanism.save()
             else:
                 mechanism = mechanisms[0]
@@ -271,15 +294,22 @@ def complete_data(label=None, remove_label = False):
         print("suite du début")
 
         r = requests.get(infos["img"], allow_redirects=True)
-        makedirs("medias/games_images", exist_ok=True)
-        with open(f"medias/games_images/{game.name}.jpg", "wb") as fd:
+        makedirs("{settings.MEDIA_ROOT}/games_images", exist_ok=True)
+        with open(f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg", "wb") as fd:
             fd.write(r.content)
-        game.image = f"medias/games_images/{game.name}.jpg"
+        game.image = f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg"
         game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]
         game.time = infos["time"]
-        game.theme = ",".join(infos["themes"])
+        for theme_name in infos["themes"]:
+            themes = Theme.objects.filter(name=theme_name)
+            if len(themes) != 0:
+                theme = themes[0]
+            else:
+                theme = theme(name=theme_name)
+                theme.save()
+            game.themes.add(theme)
         for mechanism_name in infos["mechanisms"]:
             mechanisms = Mechanism.objects.filter(name=mechanism_name)
             if len(mechanisms) != 0:

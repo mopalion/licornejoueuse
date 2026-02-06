@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-fr'
 
 TIME_ZONE = 'UTC'
 
@@ -144,3 +144,8 @@ TAILWIND_APP_NAME = "theme"
 DJANGO_HOST = getenv("DJANGO_HOST")
 if DJANGO_HOST is None:
     DJANGO_HOST = "https://ludotheque.licornejoueuse.org"
+
+MEDIA_URL = getenv("MEDIA_URL")
+if MEDIA_URL is None:
+    MEDIA_URL = "media/"
+MEDIA_ROOT = "data/media/"

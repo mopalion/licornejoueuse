@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load static %}
 {% block content %}
 	<h1>Liste de jeux de la Licorne Joueuse</h1>
   <div class="drawer">
@@ -9,7 +10,7 @@
         {% for game in games %}
           <article class="card rounded-x1 shadow-sm bg-yellow-600 m-4 w-96">
             <figure>
-              <img src="/{{ game.image }}"></img>
+              <img src="{% get_media_prefix %}{{ game.image }}"></img>
             </figure>
             <div class="card-body">
               <h3 class=card-title"">{{ game.name }}</h3>

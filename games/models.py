@@ -3,6 +3,28 @@ from io import StringIO
 from datetime import date
 from .tools import generate_qrcode
 
+COL_CHOICES = [("", ""),("R", "Règles"),("E", "Exercice"),("S", "Symbolique"),("A", "Assemblage")]
+COL_SUB = [
+    ("sen","sensoriel"),
+    ("mot","motricité"),
+    ("man","manipulation"),
+    ("rôl","rôles"),
+    ("mis","mise en scène"),
+    ("rep","représentation"),
+    ("ass","association"),
+    ("par","parcours"),
+    ("exp","expression"),
+    ("com","combinaison"),
+    ("adr","adresse"),
+    ("ref","réflexion"),
+    ("has","hasard"),
+    ("que","questions-réponses"),
+    ("cos","construction"),
+    ("age","agencement"),
+    ("exp","expérimentation"),
+    ("fab","fabrication"),
+]
+
 class Location(models.Model):
     name = models.CharField(max_length=100)
 
@@ -39,6 +61,12 @@ class Label(models.Model):
     def __str__(self):
         return f"{self.label}"
 
+class Theme(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name}"
+
 def csv_sanitize(value):
     if type(value) == type(True):
         if value == True:
@@ -49,11 +77,15 @@ def csv_sanitize(value):
         value = value.strftime('%d/%m/%y')
     return f"\"{str(value)}\""
 
+col_choices = [
+
+]
 class Game(models.Model):
     name = models.CharField(max_length=200, blank=False)
-    games_library_categorization = models.CharField(max_length=10, blank=True)
-    adapted_games_library_categorization_1 = models.CharField(max_length=10, blank=True)
-    adapted_games_library_categorization_2 = models.CharField(max_length=10, blank=True)
+    
+    games_library_categorization = models.CharField(max_length=1, blank=True, choices=COL_CHOICES)
+    adapted_games_library_categorization_1 = models.CharField(max_length=10, blank=True, choices=COL_SUB)
+    adapted_games_library_categorization_2 = models.CharField(max_length=10, blank=True, choices=COL_SUB)
     time = models.CharField(max_length=10, blank=True)
     players_number = models.CharField(max_length=10, blank=True)
     details = models.TextField(blank=True)
@@ -65,14 +97,13 @@ class Game(models.Model):
     cards_number = models.PositiveIntegerField(blank=True,null=True)
     cards_size = models.CharField(max_length=40, blank=True)
     origin = models.CharField(max_length=100, blank=True, null=True)
-    qrcode = models.ImageField(upload_to="medias/qrcode", blank=True)
-    image = models.ImageField(upload_to="medias/games_images", blank=True)
+    qrcode = models.ImageField(upload_to="qrcode", blank=True)
+    image = models.ImageField(upload_to="games_images", blank=True)
     age = models.CharField(max_length=10)
-    theme = models.CharField(max_length=30, blank=True) 
     game_type = models.CharField(max_length=20, default="boardgame", choices=[("boardgame","jds"), ("rpg","jdr"), ("wooden", "bois"), ("toys", "jouet")])
     last_inventory_date = models.DateField("last inventory date", blank=True, null=True)
     rules_video_link = models.CharField(max_length=100, blank=True, null=True)
-    for_child = models.BooleanField()
+    for_child = models.BooleanField(choices=[(True, "Oui"), (False, "Non")], default=False)
     missing_items = models.TextField(blank=True, null=True)
     inventory = models.TextField(blank=True)
 
@@ -83,6 +114,7 @@ class Game(models.Model):
     mechanisms = models.ManyToManyField(Mechanism, blank=True)
     editors = models.ManyToManyField(Editor, blank=True)
     labels = models.ManyToManyField(Label, blank=True)
+    themes = models.ManyToManyField(Theme, blank=True)
 
     def __str__(self):
         return f"{self.name}({self.number})"
@@ -105,7 +137,7 @@ class Game(models.Model):
         return res
 
     def save(self, *args, **kwargs):
-        self.qrcode.name = generate_qrcode(self)
+        self.qrcode = generate_qrcode(self)
         super().save(*args, **kwargs)
 
 class Comment(models.Model):
