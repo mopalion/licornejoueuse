@@ -6,6 +6,7 @@ from os import makedirs
 from os import environ
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import re
 from playwright.sync_api import sync_playwright
 import traceback
