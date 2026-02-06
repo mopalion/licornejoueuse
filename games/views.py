@@ -4,12 +4,14 @@ from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.db.models import Max
 import segno
 from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
 from PIL import Image, ImageDraw, ImageFont
+from datetime import date
 
 from .models import Game,Location, Comment, Label
 
@@ -318,6 +320,41 @@ def update_game(request, number):
         "errors": errors,
     }
     return render(request, "games/update_game.html", context)
+
+@login_required
+def add_game(request):
+    """
+    Allow user to add a new game. Create game if post data was sent.
+
+    Args:
+        request: Django Request object.
+    Returns:
+        the form to edit the game.
+    """
+    errors = []
+    new_number = Game.objects.aggregate(Max('number'))["number__max"] + 1
+    if request.method == "POST":
+        form = GameForm(request.POST, request.FILES)
+        if form.is_valid():
+                
+            game = form.save()
+            return redirect("game_added", game.number)
+        else:
+            for error in form.errors.items():
+                detailed_error = (form.fields[error[0]].label, error[1])
+                form.errors[error[0]] = detailed_error
+    else:
+        default_values = {
+            "number": new_number,
+        }
+        form = GameForm()
+        form.fields["number"].initial = new_number
+        form.fields["entry_year"].initial = date.today().year
+    context = {
+        "form": form,
+        "errors": errors,
+    }
+    return render(request, "games/new_game.html", context)
 
 @login_required
 def game_added(request, number):

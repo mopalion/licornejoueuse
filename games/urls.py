@@ -12,6 +12,7 @@ urlpatterns = [
         path("<int:number>/", views.detail, name="detail"),
         path("inventory/", views.inventory_index, name="inventory_index"),
         path("inventory/games/<int:number>/", views.update_game, name="update_game"),
+        path("inventory/games/new/", views.add_game, name="add_game"),
         path("inventory/games/game_added/<int:number>/", views.game_added, name="game_added"),
         path("inventory/batch", views.batch, name="batch"),
         path("inventory/game_csv", views.generate_game_csv, name="generate_game_csv"),
