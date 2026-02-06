@@ -131,6 +131,18 @@ def generate_comment_csv(request):
     )
     return response
 
+def get_selected_games(post_data):
+    selected_games = set()
+
+    for selected_game in filter(lambda x: x[0].startswith("selected-game-") and "on" in x[1], post_data.items()):
+        selected_games.add(int(selected_game[0].replace("selected-game-","")))
+
+    if "selected_games" in post_data and post_data["selected_games"] != "":
+        for game_id in post_data["selected_games"].split(","):
+            selected_games.add(int(game_id))
+    
+    return selected_games
+
 @login_required
 def inventory_index(request):
     """
@@ -161,9 +173,8 @@ def batch(request):
         the form to select attributes to change or redirect to inventory page if attributes was modified.
     """
     form = BatchForm(Location.objects.all(), Label.objects.all())
-    selected_games = []
-    for selected_game in filter(lambda x: x[0].startswith("selected-game-") and "on" in x[1], request.POST.items()):
-        selected_games.append(int(selected_game[0].replace("selected-game-","")))
+    selected_games = get_selected_games(request.POST)
+
     if selected_games == []:
         return redirect("inventory_index")
     games = Game.objects.filter(number__in=selected_games)
@@ -195,9 +206,8 @@ def print_labels(request):
     Returns:
         the pdf file to print selected games’s labels.
     """
-    selected_games = []
-    for selected_game in filter(lambda x: x[0].startswith("selected-game-") and "on" in x[1], request.POST.items()):
-        selected_games.append(int(selected_game[0].replace("selected-game-","")))
+    selected_games = get_selected_games(request.POST)
+
     if selected_games == []:
         return redirect("inventory_index")
 
@@ -214,7 +224,6 @@ def print_labels(request):
         } 
     )
     return response
-    return render(request, "games/batch.html", context)
     
 def select_games(request):
     """
@@ -230,9 +239,7 @@ def select_games(request):
     current_selected_games = set()
     if request.method == "POST":
 
-
-        for selected_game in filter(lambda x: x[0].startswith("selected-game-") and "on" in x[1], request.POST.items()):
-            selected_games.add(int(selected_game[0].replace("selected-game-","")))
+        selected_games = get_selected_games(request.POST)
 
         form = InventoryFilterForm(Location.objects.all(), Label.objects.all(), request.POST)
         if form.is_valid():
