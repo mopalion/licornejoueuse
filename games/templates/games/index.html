@@ -9,9 +9,11 @@
         <section class="drawer-content flex flex-wrap">
         {% for game in games %}
           <article class="card rounded-x1 shadow-sm bg-yellow-600 m-4 w-96">
+	    {% if game.image.name != '' %}
             <figure>
-              <img src="{% get_media_prefix %}{{ game.image }}"></img>
+		    <img src="{{ game.image.url }}"></img>
             </figure>
+	    {% endif %}
             <div class="card-body">
               <h3 class=card-title"">{{ game.name }}</h3>
               <p class="badge">n°{{ game.number }}</p>
