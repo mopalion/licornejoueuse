@@ -295,10 +295,10 @@ def complete_data(label=None, remove_label = False):
         print("suite du début")
 
         r = requests.get(infos["img"], allow_redirects=True)
-        makedirs("{settings.MEDIA_ROOT}/games_images", exist_ok=True)
-        with open(f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg", "wb") as fd:
+        makedirs(f"{settings.MEDIA_ROOT}games_images", exist_ok=True)
+        with open(f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg", "wb") as fd:
             fd.write(r.content)
-        game.image = f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg"
+        game.image = f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg"
         game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]
