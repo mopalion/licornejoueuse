@@ -2188,9 +2188,6 @@
   .w-80 {
     width: calc(var(--spacing) * 80);
   }
-  .w-95 {
-    width: calc(var(--spacing) * 95);
-  }
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
@@ -2212,9 +2209,6 @@
   .grow {
     flex-grow: 1;
   }
-  .basis-auto {
-    flex-basis: auto;
-  }
   @layer daisyui.l1.l2.l3 {
     .link {
       cursor: pointer;
@@ -2234,9 +2228,6 @@
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-  }
-  .flex-row {
-    flex-direction: row;
   }
   .flex-wrap {
     flex-wrap: wrap;

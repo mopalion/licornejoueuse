@@ -1,0 +1,8 @@
+{% extends "main.html" %}
+{% block content %}
+<form action="{% url 'add_game' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form }}
+  <input class="btn" type="submit" value="Ajouter"/>
+</form>
+{% endblock %}
