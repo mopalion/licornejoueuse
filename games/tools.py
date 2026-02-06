@@ -34,8 +34,8 @@ def generate_label(game):
     Returns:
         label (Image): the label to print
     """
-    filename = f"medias/qrcode/{slugify(game.name)}_{game.number}.png"
-    filename_qrcode = f"medias/qrcode/{slugify(game.name)}_{game.number}_qrcode.png"
+    filename = f"{settings.MEDIA_ROOT}qrcode/{slugify(game.name)}_{game.number}.png"
+    filename_qrcode = f"{settings.MEDIA_ROOT}qrcode/{slugify(game.name)}_{game.number}_qrcode.png"
 
     if game.price < 20:
         background=f"static/global/logo_licorne_vert.png"
