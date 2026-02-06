@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from django.utils.text import slugify
 from django.conf import settings
+from os import makedirs
 import segno
 import img2pdf
 from io import BytesIO
@@ -17,7 +18,8 @@ def generate_qrcode(game):
     Returns:
         str: the path of qrcode.
     """
-    filename_qrcode = f"medias/qrcode/{slugify(game.name)}_{game.number}_qrcode.png"
+    makedirs(f"{settings.MEDIA_ROOT}qrcode", exist_ok=True)
+    filename_qrcode = f"{settings.MEDIA_ROOT}qrcode/{slugify(game.name)}_{game.number}_qrcode.png"
     qrcode = segno.make(f"{settings.DJANGO_HOST}/games/{game.number}")
     qrcode.save(filename_qrcode)
 
