@@ -11,7 +11,7 @@ import re
 from playwright.sync_api import sync_playwright
 import traceback
 from os import getenv
-from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError
+from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError, Error as PlaywrightError
 
 def log_error_in_file(e):
     django_errors_dir = getenv("DJANGO_ERRORS_DIR")
@@ -109,9 +109,14 @@ class MyLudoBrowser():
         except AttributeError:
             img = None
 
+        try:
+            players = self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content()
+        except PlaywrightError:
+            players = None
+
         infos = {
             "img": img,
-            "players": self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content(),
+            "players": players,
             "age": self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content(),
             "time": self.page.get_by_title("Durée").locator("xpath=following-sibling::*[1]").text_content(),
             "themes": themes,
@@ -304,7 +309,8 @@ def complete_data(label=None, remove_label = False):
             with open(f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg", "wb") as fd:
                 fd.write(r.content)
             game.image = f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg"
-        game.players_number = infos["players"]
+        if infos["players"] is not None:
+            game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]
         game.time = infos["time"]
