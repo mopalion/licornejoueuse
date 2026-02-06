@@ -33,7 +33,7 @@ class MyLudoBrowser():
         self.page.goto("https://www.myludo.fr/#!", wait_until="networkidle")
         l = self.page.get_by_role("button", name="OK, accept all")
         l.click()
-        self.page.set_default_timeout(1000)
+        self.page.set_default_timeout(3000)
 
     def __del__(self):
         self.browser.close()
@@ -113,11 +113,15 @@ class MyLudoBrowser():
             players = self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content()
         except PlaywrightError:
             players = None
+        try:
+            age = self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content()
+        except PlaywrightTimeoutError:
+            age = None
 
         infos = {
             "img": img,
             "players": players,
-            "age": self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content(),
+            "age": age,
             "time": self.page.get_by_title("Durée").locator("xpath=following-sibling::*[1]").text_content(),
             "themes": themes,
             "mechanisms": mechanisms,
@@ -312,7 +316,8 @@ def complete_data(label=None, remove_label = False):
         if infos["players"] is not None:
             game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
-        game.age = infos["age"]
+        if infos["age"] is not None:
+            game.age = infos["age"]
         game.time = infos["time"]
         for theme_name in infos["themes"]:
             themes = Theme.objects.filter(name=theme_name)
