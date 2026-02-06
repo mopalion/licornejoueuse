@@ -308,7 +308,7 @@ def complete_data(label=None, remove_label = False):
             if len(themes) != 0:
                 theme = themes[0]
             else:
-                theme = theme(name=theme_name)
+                theme = Theme(name=theme_name)
                 theme.save()
             game.themes.add(theme)
         for mechanism_name in infos["mechanisms"]:
