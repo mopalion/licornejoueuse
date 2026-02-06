@@ -104,9 +104,13 @@ class MyLudoBrowser():
 
         self.page.screenshot(path="/mnt/c/Users/jujud/Documents/toto.png")
 
+        try:
+            img = self.page.query_selector("picture img").get_attribute("src")
+        except AttributeError:
+            img = None
 
         infos = {
-            "img": self.page.query_selector("picture img").get_attribute("src"),
+            "img": img,
             "players": self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content(),
             "age": self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content(),
             "time": self.page.get_by_title("Durée").locator("xpath=following-sibling::*[1]").text_content(),
@@ -294,11 +298,12 @@ def complete_data(label=None, remove_label = False):
             continue
         print("suite du début")
 
-        r = requests.get(infos["img"], allow_redirects=True)
-        makedirs(f"{settings.MEDIA_ROOT}games_images", exist_ok=True)
-        with open(f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg", "wb") as fd:
-            fd.write(r.content)
-        game.image = f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg"
+        if infos["img"] is not None:
+            r = requests.get(infos["img"], allow_redirects=True)
+            makedirs(f"{settings.MEDIA_ROOT}games_images", exist_ok=True)
+            with open(f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg", "wb") as fd:
+                fd.write(r.content)
+            game.image = f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg"
         game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
         game.age = infos["age"]
