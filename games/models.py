@@ -99,7 +99,7 @@ class Game(models.Model):
     origin = models.CharField(max_length=100, blank=True, null=True)
     qrcode = models.ImageField(upload_to="qrcode", blank=True)
     image = models.ImageField(upload_to="games_images", blank=True)
-    age = models.CharField(max_length=10)
+    age = models.CharField(max_length=10, blank=True, null=True)
     game_type = models.CharField(max_length=20, default="boardgame", choices=[("boardgame","jds"), ("rpg","jdr"), ("wooden", "bois"), ("toys", "jouet")])
     last_inventory_date = models.DateField("last inventory date", blank=True, null=True)
     rules_video_link = models.CharField(max_length=100, blank=True, null=True)
