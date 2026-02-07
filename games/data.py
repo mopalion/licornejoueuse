@@ -194,7 +194,7 @@ def get_game(row, site, à_vendre):
         adapted_games_library_categorization_2=row["COL adapté 2"].lower(),
         time=row["Duree"],
         players_number=row["Nbre de joueurs"],
-        price=float(row["Prix neuf"].replace(",",".")),
+        price=float(row["Prix neuf"].replace(",",".").strip()),
         number=row["N° réf"],
         location=site,
         cards_number=row["Nbre de cartes"] if row["Nbre de cartes"] != "" else 0,
