@@ -21,9 +21,9 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
-    path("games/", include("games.urls")),
-    path("accounts/", LoginView.as_view(template_name="login.html", next_page="/games/"), name='login'),
-    path("accounts/logout", LogoutView.as_view(next_page="/games/"), name='logout'),
+    path("", include("games.urls")),
+    path("accounts/", LoginView.as_view(template_name="login.html", next_page="/"), name='login'),
+    path("accounts/logout", LogoutView.as_view(next_page="/"), name='logout'),
     path('admin/', admin.site.urls),
 ]
 

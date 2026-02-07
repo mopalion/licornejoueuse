@@ -148,4 +148,6 @@ if DJANGO_HOST is None:
 MEDIA_URL = getenv("MEDIA_URL")
 if MEDIA_URL is None:
     MEDIA_URL = "media/"
-MEDIA_ROOT = "data/media/"
+MEDIA_ROOT = getenv("MEDIA_ROOT")
+if MEDIA_ROOT is None:
+    MEDIA_ROOT = "data/media/"

@@ -11,7 +11,7 @@ import re
 from playwright.sync_api import sync_playwright
 import traceback
 from os import getenv
-from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError
+from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError, Error as PlaywrightError
 
 def log_error_in_file(e):
     django_errors_dir = getenv("DJANGO_ERRORS_DIR")
@@ -33,7 +33,7 @@ class MyLudoBrowser():
         self.page.goto("https://www.myludo.fr/#!", wait_until="networkidle")
         l = self.page.get_by_role("button", name="OK, accept all")
         l.click()
-        self.page.set_default_timeout(1000)
+        self.page.set_default_timeout(3000)
 
     def __del__(self):
         self.browser.close()
@@ -104,11 +104,24 @@ class MyLudoBrowser():
 
         self.page.screenshot(path="/mnt/c/Users/jujud/Documents/toto.png")
 
+        try:
+            img = self.page.query_selector("picture img").get_attribute("src")
+        except AttributeError:
+            img = None
+
+        try:
+            players = self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content()
+        except PlaywrightError:
+            players = None
+        try:
+            age = self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content()
+        except PlaywrightTimeoutError:
+            age = None
 
         infos = {
-            "img": self.page.query_selector("picture img").get_attribute("src"),
-            "players": self.page.get_by_title("Joueurs").locator("xpath=following-sibling::*[1]").text_content(),
-            "age": self.page.get_by_title("Âge").locator("xpath=following-sibling::*[1]").text_content(),
+            "img": img,
+            "players": players,
+            "age": age,
             "time": self.page.get_by_title("Durée").locator("xpath=following-sibling::*[1]").text_content(),
             "themes": themes,
             "mechanisms": mechanisms,
@@ -294,21 +307,24 @@ def complete_data(label=None, remove_label = False):
             continue
         print("suite du début")
 
-        r = requests.get(infos["img"], allow_redirects=True)
-        makedirs("{settings.MEDIA_ROOT}/games_images", exist_ok=True)
-        with open(f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg", "wb") as fd:
-            fd.write(r.content)
-        game.image = f"{settings.MEDIA_ROOT}/games_images/{game.name}.jpg"
-        game.players_number = infos["players"]
+        if infos["img"] is not None:
+            r = requests.get(infos["img"], allow_redirects=True)
+            makedirs(f"{settings.MEDIA_ROOT}games_images", exist_ok=True)
+            with open(f"{settings.MEDIA_ROOT}games_images/{game.name}.jpg", "wb") as fd:
+                fd.write(r.content)
+            game.image = f"games_images/{game.name}.jpg"
+        if infos["players"] is not None:
+            game.players_number = infos["players"]
         game.myludo_path = infos["myludo_path"]
-        game.age = infos["age"]
+        if infos["age"] is not None:
+            game.age = infos["age"]
         game.time = infos["time"]
         for theme_name in infos["themes"]:
             themes = Theme.objects.filter(name=theme_name)
             if len(themes) != 0:
                 theme = themes[0]
             else:
-                theme = theme(name=theme_name)
+                theme = Theme(name=theme_name)
                 theme.save()
             game.themes.add(theme)
         for mechanism_name in infos["mechanisms"]:

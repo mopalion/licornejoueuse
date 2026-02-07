@@ -2,11 +2,13 @@ FROM python:3.14
 
 WORKDIR /code
 
-COPY . /code
+COPY ./requirements.txt /code/
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN playwright install
 RUN playwright install-deps
+
+COPY . /code
 
 EXPOSE 8080
 
