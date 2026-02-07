@@ -89,7 +89,7 @@ class Game(models.Model):
     time = models.CharField(max_length=10, blank=True)
     players_number = models.CharField(max_length=10, blank=True)
     details = models.TextField(blank=True)
-    entry_year = models.PositiveIntegerField(blank=False, null=False)
+    entry_year = models.PositiveIntegerField(blank=False, null=True)
     number = models.PositiveIntegerField("Number", blank=False, unique=True)
     price = models.FloatField(blank=True, null=True)
     year = models.PositiveIntegerField(blank=True, null=True)
