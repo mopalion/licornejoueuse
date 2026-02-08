@@ -84,7 +84,7 @@
       <tr>
         <td><input name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
         <td>{{ game.number }}</td>
-        <td><a href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
+        <td><a class="link" href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
         <td>{{ game.location }}</td>
         <td>{{ game.year }}</td>
       </tr>
