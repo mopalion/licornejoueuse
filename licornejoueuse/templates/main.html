@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Licorne Joueuse</title>
   {% tailwind_css %}
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons&icon_names=login,logout,shelves,view_list,control_point" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=add_circle,login,logout,shelves,view_list" rel="stylesheet">
   <style type="text/css">
-    .material-icons.text-base {
+    .material-symbols-outlined.text-base {
       font-size: 2em;
     }
   </style>
@@ -22,7 +22,7 @@
     <ul class="menu menu-horizontal px-1 flex-1">
       <li>
         <details>
-          <summary><span class="material-icons text-base">shelves</span>Catalogue</summary>
+          <summary><span class="material-symbols-outlined text-base">shelves</span>Catalogue</summary>
             <ul class="bg-base-100 rounded-t-none p-2 z-50 bg-zinc-900">
               <li><a href="{% url 'index' %}">Jeux de société</a></li>
               <li><a href="{% url 'wooden_index' %}">Jeux en bois</a></li>
@@ -38,7 +38,7 @@
     <ul class="menu menu-horizontal px-1 flex-1">
       <li>
         <details>
-          <summary><span class="material-icons text-base">view_list</span>Inventaire</summary>
+          <summary><span class="material-symbols-outlined text-base">view_list</span>Inventaire</summary>
             <ul class="bg-base-100 rounded-t-none p-2 z-50 bg-zinc-900">
               <li><a href="{% url 'inventory_index' %}">Liste</a></li>
               <li><a href="{% url 'generate_game_csv' %}">Jeux - CSV</a></li>
@@ -48,11 +48,11 @@
     </ul>
     {% endif %}
     {% if not request.user.is_authenticated %}
-    <button class="flex-1"><a href="{% url 'login' %}"><span class="material-icons text-base mr-2">shelves</span>Se connecter</a></button>
+    <button class="flex-1"><a href="{% url 'login' %}"><span class="material-symbols-outlined text-base mr-2">login</span>Se connecter</a></button>
     {% else %}
       <form action="{% url 'logout' %}" method="post" class="flex-1">
         {% csrf_token %}
-        <button type="submit" class="w-full"><span class="text-base material-icons mr-2">logout</span>Se déconnecter</button>
+        <button type="submit" class="w-full"><span class="text-base material-symbols-outlined mr-2">logout</span>Se déconnecter</button>
       </form>
     {% endif %}
 	</nav>
