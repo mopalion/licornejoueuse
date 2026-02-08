@@ -25,6 +25,7 @@
     --color-zinc-950: oklch(14.1% 0.005 285.823);
     --color-black: #000;
     --spacing: 0.25rem;
+    --container-xl: 36rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
     --text-base: 1rem;
@@ -1630,8 +1631,14 @@
       outline: 2px solid currentColor;
     }
   }
+  .fixed {
+    position: fixed;
+  }
   .static {
     position: static;
+  }
+  .sticky {
+    position: sticky;
   }
   @layer daisyui.l1.l2 {
     .toast-end {
@@ -1646,6 +1653,9 @@
       bottom: auto;
       --toast-y: 0;
     }
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
   }
   @layer daisyui.l1.l2.l3 {
     .file-input {
@@ -1878,6 +1888,18 @@
   }
   .z-50 {
     z-index: 50;
+  }
+  .z-60 {
+    z-index: 60;
+  }
+  .z-70 {
+    z-index: 70;
+  }
+  .z-100 {
+    z-index: 100;
+  }
+  .z-101 {
+    z-index: 101;
   }
   @layer daisyui.l1.l2.l3 {
     .drawer-content {
@@ -2167,6 +2189,12 @@
   .h-screen {
     height: 100vh;
   }
+  .w-1\/2 {
+    width: calc(1/2 * 100%);
+  }
+  .w-9\/10 {
+    width: calc(9/10 * 100%);
+  }
   .w-19 {
     width: calc(var(--spacing) * 19);
   }
@@ -2196,6 +2224,9 @@
   }
   .w-full {
     width: 100%;
+  }
+  .w-xl {
+    width: var(--container-xl);
   }
   .max-w-80 {
     max-width: calc(var(--spacing) * 80);
@@ -2292,6 +2323,9 @@
   .bg-orange-300 {
     background-color: var(--color-orange-300);
   }
+  .bg-orange-500 {
+    background-color: var(--color-orange-500);
+  }
   .bg-pink-100 {
     background-color: var(--color-pink-100);
   }
@@ -2310,8 +2344,23 @@
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
+  .p-100 {
+    padding: calc(var(--spacing) * 100);
+  }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
+  }
+  .pr-10 {
+    padding-right: calc(var(--spacing) * 10);
+  }
+  .pr-100 {
+    padding-right: calc(var(--spacing) * 100);
+  }
+  .pl-10 {
+    padding-left: calc(var(--spacing) * 10);
+  }
+  .pl-100 {
+    padding-left: calc(var(--spacing) * 100);
   }
   .font-serif {
     font-family: var(--font-serif);

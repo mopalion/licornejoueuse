@@ -4,13 +4,13 @@
   {% csrf_token %}
   <input name="selected_games" type="hidden" value="{{ selected_games | join:',' }}" />
 <h1>Inventaire des jeux de la Licorne</h1>
-<div class="flex">
+<div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10">
   <aside class="drawer grow">
     <input id="drawer-filtre" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content">
       <label for="drawer-filtre" class="btn btn-outline drawer-button m-2 border-orange-500 border-2">Filtrage</label>
     </div>
-    <div class="drawer-side bg-orange-300">
+    <div class="drawer-side bg-orange-300 z-70">
       <label for="drawer-filtre" aria-labl="close sidebar" class="drawer-overlay"></label>
       <div>
       {{ filter_form.as_p }}
