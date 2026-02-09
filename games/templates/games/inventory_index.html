@@ -4,11 +4,11 @@
   {% csrf_token %}
   <input name="selected_games" type="hidden" value="{{ selected_games | join:',' }}" />
 <h1>Inventaire des jeux de la Licorne</h1>
-<div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10">
-  <aside class="drawer grow">
+<div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10 flex-wrap place-content-around">
+  <aside class="drawer grow btn btn-outline m-2 border-orange-500 border-2 flex-1">
     <input id="drawer-filtre" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content">
-      <label for="drawer-filtre" class="btn btn-outline drawer-button m-2 border-orange-500 border-2">Filtrage</label>
+      <label for="drawer-filtre" class="drawer-button">Filtrage</label>
     </div>
     <div class="drawer-side bg-orange-300 z-70">
       <label for="drawer-filtre" aria-labl="close sidebar" class="drawer-overlay"></label>
@@ -18,13 +18,23 @@
       </div>
     </div>
   </aside>
-  <div><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
-  <aside class="drawer drawer-end grow justify-end">
+  <div class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
+  <a href="#modal_shortcuts" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">align_center</span></a>
+  <div id="modal_shortcuts" class="modal block" role="dialog">
+        {% for hundred in shortcuts %}
+          <div class="flex mt-0 mb-0 place-content-around">
+          {% for quart in hundred %}
+          <button class="btn w-10 border-orange-500 border-2 m-1" type="button"><a href="#tr-{{ quart.1 }}">{{ quart.0 }}</a></button>
+          {% endfor %}
+          </div>
+        {% endfor %}
+  </div>
+  <aside class="drawer grow btn btn-outline m-2 border-orange-500 border-2 flex-1">
     <input id="drawer-action" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content">
-      <label for="drawer-action" class="btn btn-outline drawer-button m-2 border-orange-500 border-2">Actions</label>
+      <label for="drawer-action" class="drawer-button">Actions</label>
     </div>
-    <div class="drawer-side bg-orange-300">
+    <div class="drawer-side bg-orange-300 z-70">
       <label for="drawer-action" aria-labl="close sidebar" class="drawer-overlay"></label>
       <div class="">
         <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
@@ -82,7 +92,7 @@
     <tbody>
       {% for game in games %}
       <tr>
-        <td><input name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
+        <td><input id="tr-{{ game.number }}" name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
         <td>{{ game.number }}</td>
         <td><a class="link" href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
         <td>{{ game.location }}</td>

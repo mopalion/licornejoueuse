@@ -25,7 +25,6 @@
     --color-zinc-950: oklch(14.1% 0.005 285.823);
     --color-black: #000;
     --spacing: 0.25rem;
-    --container-xl: 36rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
     --text-base: 1rem;
@@ -192,6 +191,61 @@
   }
 }
 @layer utilities {
+  @layer daisyui.l1.l2.l3 {
+    .modal {
+      pointer-events: none;
+      visibility: hidden;
+      position: fixed;
+      inset: calc(0.25rem * 0);
+      margin: calc(0.25rem * 0);
+      display: grid;
+      height: 100%;
+      max-height: none;
+      width: 100%;
+      max-width: none;
+      align-items: center;
+      justify-items: center;
+      background-color: transparent;
+      padding: calc(0.25rem * 0);
+      color: inherit;
+      transition: visibility 0.3s allow-discrete, background-color 0.3s ease-out, opacity 0.1s ease-out;
+      overflow: clip;
+      overscroll-behavior: contain;
+      z-index: 999;
+      scrollbar-gutter: auto;
+    }
+    .modal::backdrop {
+      display: none;
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .modal.modal-open, .modal[open], .modal:target, .modal-toggle:checked + .modal {
+      pointer-events: auto;
+      visibility: visible;
+      opacity: 100%;
+      transition: visibility 0s allow-discrete, background-color 0.3s ease-out, opacity 0.1s ease-out;
+      background-color: oklch(0% 0 0/ 0.4);
+    }
+    .modal.modal-open .modal-box, .modal[open] .modal-box, .modal:target .modal-box, .modal-toggle:checked + .modal .modal-box {
+      translate: 0 0;
+      scale: 1;
+      opacity: 1;
+    }
+    :root:has(.modal.modal-open), :root:has(.modal[open]), :root:has(.modal:target), :root:has(.modal-toggle:checked + .modal) {
+      --page-has-backdrop: 1;
+      --page-overflow: hidden;
+      --page-scroll-bg: var(--page-scroll-bg-on);
+      --page-scroll-gutter: stable;
+      --page-scroll-transition: var(--page-scroll-transition-on);
+      animation: set-page-has-scroll forwards;
+      animation-timeline: scroll();
+    }
+    @starting-style {
+      .modal.modal-open, .modal[open], .modal:target, .modal-toggle:checked + .modal {
+        opacity: 0%;
+      }
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     :where(.drawer-side) {
       overflow-x: hidden;
@@ -1631,9 +1685,6 @@
       outline: 2px solid currentColor;
     }
   }
-  .fixed {
-    position: fixed;
-  }
   .static {
     position: static;
   }
@@ -1889,17 +1940,8 @@
   .z-50 {
     z-index: 50;
   }
-  .z-60 {
-    z-index: 60;
-  }
   .z-70 {
     z-index: 70;
-  }
-  .z-100 {
-    z-index: 100;
-  }
-  .z-101 {
-    z-index: 101;
   }
   @layer daisyui.l1.l2.l3 {
     .drawer-content {
@@ -2058,6 +2100,9 @@
       }
     }
   }
+  .mt-0 {
+    margin-top: calc(var(--spacing) * 0);
+  }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
@@ -2078,6 +2123,9 @@
       color: var(--color-base-content);
       font-weight: 600;
     }
+  }
+  .mb-0 {
+    margin-bottom: calc(var(--spacing) * 0);
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
@@ -2189,11 +2237,23 @@
   .h-screen {
     height: 100vh;
   }
-  .w-1\/2 {
-    width: calc(1/2 * 100%);
+  .w-1\/4 {
+    width: calc(1/4 * 100%);
   }
-  .w-9\/10 {
-    width: calc(9/10 * 100%);
+  .w-4 {
+    width: calc(var(--spacing) * 4);
+  }
+  .w-5 {
+    width: calc(var(--spacing) * 5);
+  }
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+  .w-10 {
+    width: calc(var(--spacing) * 10);
+  }
+  .w-15 {
+    width: calc(var(--spacing) * 15);
   }
   .w-19 {
     width: calc(var(--spacing) * 19);
@@ -2222,11 +2282,11 @@
   .w-190 {
     width: calc(var(--spacing) * 190);
   }
+  .w-800 {
+    width: calc(var(--spacing) * 800);
+  }
   .w-full {
     width: 100%;
-  }
-  .w-xl {
-    width: var(--container-xl);
   }
   .max-w-80 {
     max-width: calc(var(--spacing) * 80);
@@ -2323,9 +2383,6 @@
   .bg-orange-300 {
     background-color: var(--color-orange-300);
   }
-  .bg-orange-500 {
-    background-color: var(--color-orange-500);
-  }
   .bg-pink-100 {
     background-color: var(--color-pink-100);
   }
@@ -2344,23 +2401,14 @@
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
-  .p-100 {
-    padding: calc(var(--spacing) * 100);
-  }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
   }
   .pr-10 {
     padding-right: calc(var(--spacing) * 10);
   }
-  .pr-100 {
-    padding-right: calc(var(--spacing) * 100);
-  }
   .pl-10 {
     padding-left: calc(var(--spacing) * 10);
-  }
-  .pl-100 {
-    padding-left: calc(var(--spacing) * 100);
   }
   .font-serif {
     font-family: var(--font-serif);

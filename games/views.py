@@ -287,12 +287,31 @@ def select_games(request):
             selected_games.remove(game.number)
     selected_games_to_display = Game.objects.filter(number__in=selected_games)
 
+    # Prepare shortcuts links
+    shortcuts = []
+    i_games = iter(games)
+    for hundred in range(0,999,100):
+        quarts = []
+        for quart in range(hundred, hundred +99, 25):
+            while True:
+                try:
+                    game = next(i_games)
+                except StopIteration:
+                    break
+                value = game.number
+                if value >= quart:
+                    break
+            quarts.append((quart, value))
+
+        shortcuts.append(quarts)
+
     context = {
         "games": games,
         "filter_form": form,
         "selected_games": selected_games,
         "selected_games_to_display": selected_games_to_display,
         "current_selected_games": current_selected_games,
+        "shortcuts": shortcuts,
     }
     return render(request, "games/inventory_index.html", context)
 
