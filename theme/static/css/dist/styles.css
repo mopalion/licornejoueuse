@@ -19,6 +19,8 @@
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-zinc-50: oklch(98.5% 0 0);
     --color-zinc-100: oklch(96.7% 0.001 286.375);
+    --color-zinc-200: oklch(92% 0.004 286.32);
+    --color-zinc-300: oklch(87.1% 0.006 286.286);
     --color-zinc-500: oklch(55.2% 0.016 285.938);
     --color-zinc-800: oklch(27.4% 0.006 286.033);
     --color-zinc-900: oklch(21% 0.006 285.885);
@@ -2353,6 +2355,12 @@
   .bg-zinc-50 {
     background-color: var(--color-zinc-50);
   }
+  .bg-zinc-300 {
+    background-color: var(--color-zinc-300);
+  }
+  .bg-zinc-800 {
+    background-color: var(--color-zinc-800);
+  }
   .bg-zinc-900 {
     background-color: var(--color-zinc-900);
   }
@@ -2427,6 +2435,12 @@
   }
   .text-zinc-50 {
     color: var(--color-zinc-50);
+  }
+  .text-zinc-100 {
+    color: var(--color-zinc-100);
+  }
+  .text-zinc-200 {
+    color: var(--color-zinc-200);
   }
   .text-zinc-500 {
     color: var(--color-zinc-500);

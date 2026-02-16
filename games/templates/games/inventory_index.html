@@ -4,20 +4,14 @@
   {% csrf_token %}
   <input name="selected_games" type="hidden" value="{{ selected_games | join:',' }}" />
 <h1>Inventaire des jeux de la Licorne</h1>
+
+<!-- Bandeau d’actions de l’inventaire  -->
 <div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10 flex-wrap place-content-around">
-  <aside class="drawer grow btn btn-outline m-2 border-orange-500 border-2 flex-1">
-    <input id="drawer-filtre" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <label for="drawer-filtre" class="drawer-button">Filtrage</label>
-    </div>
-    <div class="drawer-side bg-orange-300 z-70">
-      <label for="drawer-filtre" aria-labl="close sidebar" class="drawer-overlay"></label>
-      <div>
+  <a href="#modal_filter" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list</span></a>
+  <div id="modal_filter" class="modal block bg-orange-300" role="dialog">
       {{ filter_form.as_p }}
       <input type="submit" value="Filtrer" class="btn">
-      </div>
-    </div>
-  </aside>
+  </div>
   <div class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
   <a href="#modal_shortcuts" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">align_center</span></a>
   <div id="modal_shortcuts" class="modal block" role="dialog">
@@ -29,23 +23,18 @@
           </div>
         {% endfor %}
   </div>
-  <aside class="drawer grow btn btn-outline m-2 border-orange-500 border-2 flex-1">
-    <input id="drawer-action" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <label for="drawer-action" class="drawer-button">Actions</label>
-    </div>
-    <div class="drawer-side bg-orange-300 z-70">
-      <label for="drawer-action" aria-labl="close sidebar" class="drawer-overlay"></label>
-      <div class="">
-        <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
-        <br>
-        <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
-        <br>
-        <input type="submit" value="Go" class="btn m-2">
-      </div>
-    </div>
-  </aside>
+  <a href="#modal_action" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">action_key</span></a>
+  <div id="modal_action" class="modal block bg-orange-300" role="dialog">
+      <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
+      <br>
+      <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
+      <br>
+      <input type="submit" value="Go" class="btn m-2">
+  </div>
+
 </div>
+<!-- Fin du bandeau d’actions -->
+
 {% if selected_games_to_display %}
 <div class="flex justify-center">
 <section class="collapse">
