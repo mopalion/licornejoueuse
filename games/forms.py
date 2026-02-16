@@ -10,7 +10,7 @@ class UnicornTextInputWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 input"
+            "class": "text-zinc-200 bg-zinc-800 input"
         })
 
 class UnicornSelectWidget(forms.Select):
@@ -19,7 +19,7 @@ class UnicornSelectWidget(forms.Select):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 select"
+            "class": "text-zinc-200 bg-zinc-800 select"
         })
 
 class UnicornSelectMultipleWidget(forms.SelectMultiple):
@@ -28,7 +28,7 @@ class UnicornSelectMultipleWidget(forms.SelectMultiple):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 select"
+            "class": "text-zinc-200 bg-zinc-800 select"
         })
 
 class UnicornTextAreaWidget(forms.Textarea):
@@ -87,7 +87,7 @@ class GameNameWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 input border-orange-500 border-2 mt-2 mb-2 text-xl font-black m-auto block",
+            "class": "text-zinc-800 input border-orange-500 border-2 mt-2 mb-2 text-xl font-black m-auto block bg-zinc-200",
             "placeholder": "Nom du jeu",
         })
 
@@ -97,7 +97,7 @@ class MyludoPathWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800",
+            "class": "text-zinc-800 bg-zinc-200",
             "placeholder": "#!/game/12345",
         })
 
@@ -107,7 +107,7 @@ class ImageWidget(forms.FileInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 file-input",
+            "class": "text-zinc-950 bg-zinc-200 file-input",
         })
 
 class GameForm(forms.ModelForm):
@@ -190,7 +190,7 @@ class GameForm(forms.ModelForm):
             "number": forms.TextInput(),
             "price": forms.TextInput(),
             "details": UnicornTextAreaWidget(),
-            "year": UnicornTextInputWidget(),
+            "year": forms.TextInput(),
             "myludo_path": MyludoPathWidget(),
             "image": ImageWidget(),
         }
