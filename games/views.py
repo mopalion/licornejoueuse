@@ -289,21 +289,22 @@ def select_games(request):
 
     # Prepare shortcuts links
     shortcuts = []
-    i_games = iter(games)
-    for hundred in range(0,999,100):
-        quarts = []
-        for quart in range(hundred, hundred +99, 25):
-            while True:
-                try:
-                    game = next(i_games)
-                except StopIteration:
-                    break
-                value = game.number
-                if value >= quart:
-                    break
-            quarts.append((quart, value))
+    if games:
+        i_games = iter(games)
+        for hundred in range(0,999,100):
+            quarts = []
+            for quart in range(hundred, hundred +99, 25):
+                while True:
+                    try:
+                        game = next(i_games)
+                    except StopIteration:
+                        break
+                    value = game.number
+                    if value >= quart:
+                        break
+                quarts.append((quart, value))
 
-        shortcuts.append(quarts)
+            shortcuts.append(quarts)
 
     context = {
         "games": games,
