@@ -241,6 +241,10 @@ def select_games(request):
 
         selected_games = get_selected_games(request.POST)
 
+        if "save_btn" in request.POST:
+            request.session["selected_games"] = list(selected_games)
+        if "load_btn" in request.POST and "selected_games" in request.session:
+            selected_games = set(request.session["selected_games"])
         form = InventoryFilterForm(Location.objects.all(), Label.objects.all(), request.POST)
         if form.is_valid():
             # Apply differents filters to games.

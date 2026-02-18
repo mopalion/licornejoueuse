@@ -27,6 +27,8 @@
         {% endfor %}
   </div>
   <a href="#modal_action" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">action_key</span></a>
+  <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="save_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">save</span></button>
+  <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="load_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">sync_saved_locally</span></button>
   <div id="modal_action" class="modal block bg-orange-300" role="dialog">
       <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
       <br>

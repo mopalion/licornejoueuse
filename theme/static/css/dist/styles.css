@@ -20,7 +20,6 @@
     --color-zinc-50: oklch(98.5% 0 0);
     --color-zinc-100: oklch(96.7% 0.001 286.375);
     --color-zinc-200: oklch(92% 0.004 286.32);
-    --color-zinc-300: oklch(87.1% 0.006 286.286);
     --color-zinc-500: oklch(55.2% 0.016 285.938);
     --color-zinc-800: oklch(27.4% 0.006 286.033);
     --color-zinc-900: oklch(21% 0.006 285.885);
@@ -1942,9 +1941,6 @@
   .z-50 {
     z-index: 50;
   }
-  .z-70 {
-    z-index: 70;
-  }
   @layer daisyui.l1.l2.l3 {
     .drawer-content {
       grid-column-start: 2;
@@ -2263,9 +2259,6 @@
   .flex-auto {
     flex: auto;
   }
-  .grow {
-    flex-grow: 1;
-  }
   @layer daisyui.l1.l2.l3 {
     .link {
       cursor: pointer;
@@ -2321,19 +2314,6 @@
   .border-orange-500 {
     border-color: var(--color-orange-500);
   }
-  @layer daisyui.l1.l2 {
-    .table-zebra tbody tr:where(:nth-child(even)) {
-      background-color: var(--color-base-200);
-    }
-    .table-zebra tbody tr:where(:nth-child(even)) :where(.table-pin-cols tr th) {
-      background-color: var(--color-base-200);
-    }
-    @media (hover: hover) {
-      .table-zebra tbody tr.row-hover:hover, .table-zebra tbody tr.row-hover:where(:nth-child(even)):hover {
-        background-color: var(--color-base-300);
-      }
-    }
-  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
@@ -2360,9 +2340,6 @@
   }
   .bg-zinc-200 {
     background-color: var(--color-zinc-200);
-  }
-  .bg-zinc-300 {
-    background-color: var(--color-zinc-300);
   }
   .bg-zinc-800 {
     background-color: var(--color-zinc-800);
@@ -2442,9 +2419,6 @@
   .text-zinc-50 {
     color: var(--color-zinc-50);
   }
-  .text-zinc-100 {
-    color: var(--color-zinc-100);
-  }
   .text-zinc-200 {
     color: var(--color-zinc-200);
   }
@@ -2453,9 +2427,6 @@
   }
   .text-zinc-800 {
     color: var(--color-zinc-800);
-  }
-  .text-zinc-900 {
-    color: var(--color-zinc-900);
   }
   .text-zinc-950 {
     color: var(--color-zinc-950);
