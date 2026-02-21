@@ -1941,6 +1941,9 @@
   .z-50 {
     z-index: 50;
   }
+  .z-60 {
+    z-index: 60;
+  }
   @layer daisyui.l1.l2.l3 {
     .drawer-content {
       grid-column-start: 2;
