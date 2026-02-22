@@ -145,6 +145,9 @@ class Comment(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     created_date = models.DateTimeField()
 
+    def __str__(self):
+        return f"{self.game.number}-{self.created_date.strftime('%y%m%d%H%M')}-{self.text[:20]}"
+
     def csv_data(self):
         return f"{csv_sanitize(self.game.number)};{csv_sanitize(self.created_date)};{csv_sanitize(self.text)}"
 
