@@ -2,7 +2,7 @@ from django import forms
 import datetime
 from copy import copy
 
-from games.models import Game, COL_CHOICES, COL_SUB
+from games.models import Game, COL_CHOICES, COL_SUB, Comment
 
 class UnicornTextInputWidget(forms.TextInput):
     """
@@ -37,7 +37,7 @@ class UnicornTextAreaWidget(forms.Textarea):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 textarea w-full"
+            "class": "text-zinc-800 bg-zinc-200 textarea w-full border-1 border-solid border-zinc-800"
         })
 
 class GameFilterForm(forms.Form):
@@ -193,4 +193,17 @@ class GameForm(forms.ModelForm):
             "year": forms.TextInput(),
             "myludo_path": MyludoPathWidget(),
             "image": ImageWidget(),
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            "text",
+        ]
+        labels = {
+            "text": "texte",
+        }
+        widgets = {
+            "text": UnicornTextAreaWidget(),
         }

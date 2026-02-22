@@ -17,4 +17,6 @@ urlpatterns = [
         path("inventory/batch", views.batch, name="batch"),
         path("inventory/game_csv", views.generate_game_csv, name="generate_game_csv"),
         path("inventory/comment_csv", views.generate_comment_csv, name="generate_comment_csv"),
+        path("inventory/new_comment/<int:number>/", views.new_comment, name="new_comment"),
+        path("inventory/comment_added/", views.comment_added, name="comment_added"),
         ]

@@ -2192,6 +2192,15 @@
     }
   }
   @layer daisyui.l1.l2.l3 {
+    .chat {
+      display: grid;
+      grid-auto-rows: min-content;
+      column-gap: calc(0.25rem * 3);
+      padding-block: calc(0.25rem * 1);
+      --mask-chat: url("data:image/svg+xml,%3csvg width='13' height='13' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 11.5004C0 13.0004 2 13.0004 2 13.0004H12H13V0.00036329L12.5 0C12.5 0 11.977 2.09572 11.8581 2.50033C11.6075 3.35237 10.9149 4.22374 9 5.50036C6 7.50036 0 10.0004 0 11.5004Z'/%3e%3c/svg%3e");
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
     .card-actions {
       display: flex;
       flex-wrap: wrap;
@@ -2304,9 +2313,17 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
+  .border-1 {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
+  }
+  .border-solid {
+    --tw-border-style: solid;
+    border-style: solid;
   }
   .border-blue-200 {
     border-color: var(--color-blue-200);
@@ -2316,6 +2333,9 @@
   }
   .border-orange-500 {
     border-color: var(--color-orange-500);
+  }
+  .border-zinc-800 {
+    border-color: var(--color-zinc-800);
   }
   .bg-base-100 {
     background-color: var(--color-base-100);

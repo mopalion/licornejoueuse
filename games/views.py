@@ -6,12 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Max
 import segno
-from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm
+from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
 from PIL import Image, ImageDraw, ImageFont
-from datetime import date
+from datetime import date, datetime
 
 from .models import Game,Location, Comment, Label
 
@@ -401,3 +401,44 @@ def game_added(request, number):
 
     game = Game.objects.get(number=number)
     return render(request, "games/game_added.html", {"game": game})
+
+@login_required
+def new_comment(request, number):
+    """
+    Add a new comment for the game with indicated number
+
+    Args:
+        request: Django Request object,
+        int: Number of the game that received new comment
+    Returns:
+        The form to add a new comment
+    """
+    form = None
+
+    game = Game.objects.get(number=number)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.created_date = datetime.now()
+            comment.game = game
+            comment.save()
+            return redirect("comment_added")
+
+    if form is None:
+        form = CommentForm()
+    return render(request, "games/new_comment.html", {"game": game, "form": form})
+
+@login_required
+def comment_added(request):
+    """
+    Display that a comment was added.
+
+    Args:
+        request: Django Request object.
+    Returns:
+        The confirmation of the upgrade.
+    """
+
+    return render(request, "games/comment_added.html")

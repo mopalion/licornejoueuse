@@ -80,6 +80,7 @@
         <th></th>
         <th>Numéro</th>
         <th>Nom</th>
+        <th></th>
         <th>Localisation</th>
         <th>Année de sortie</th>
       </tr>
@@ -90,6 +91,7 @@
         <td><input id="tr-{{ game.number }}" name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
         <td>{{ game.number }}</td>
         <td><a class="link" href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
+        <td><a href="{% url 'new_comment' game.number %}" class="material-symbols-outlined" target="_blank">chat</a></td>
         <td>{{ game.location }}</td>
         <td>{{ game.year }}</td>
       </tr>
