@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Max
 import segno
-from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm
+from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm, CommentForms
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
@@ -333,22 +333,42 @@ def update_game(request, number):
     """
     game = Game.objects.get(number=number)
     errors = []
+    comments_errors = []
+
     if request.method == "POST":
+
+        comments_forms = CommentForms(request.POST)
+        if comments_forms.is_valid():
+            comments_forms.save()
+            comments_form_is_valid = True
+        else:
+            comments_errors = comments_forms.errors
+            comments_form_is_valid = False
+
         form = GameForm(request.POST, request.FILES, instance=game)
         if form.is_valid():
                 
             form.save()
-            return redirect("game_added", game.number)
+            form_is_valid = True
         else:
             for error in form.errors.items():
                 detailed_error = (form.fields[error[0]].label, error[1])
                 form.errors[error[0]] = detailed_error
+            form_is_valid = False
+
+        if comments_form_is_valid and form_is_valid:
+            return redirect("game_added", game.number)
+
     else:
         form = GameForm(instance=Game.objects.get(number=number))
+        comments_forms = CommentForms(queryset=Comment.objects.filter(game=game))
+
     context = {
         "game": game,
         "form": form,
+        "comments_forms": comments_forms,
         "errors": errors,
+        "comments_errors": comments_errors,
     }
     return render(request, "games/update_game.html", context)
 

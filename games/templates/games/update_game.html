@@ -3,6 +3,26 @@
 <form action="{% url 'update_game' game.number %}" method="post" enctype="multipart/form-data" class="bg-zinc-200">
   {% csrf_token %}
   {{ form }}
+  <fieldset class="fieldset m-2">
+    <legend class="fieldset-legend text-zinc-950 font-black">Commentaires</legend>
+    {% if comments_errors %}
+     <div role="alert" class="alert alert-error">
+       <ul>
+         {% for error in comments_errors %}
+         <li>error</li>
+         {% endfor %}
+       </ul>
+     </div>
+    {% endif %}
+    {% if comments_forms %}
+      {{ comments_forms.management_form }}
+      {% for comment in comments_forms %}
+      {{ comment }}
+      {% endfor %}
+    {% else %}
+      <p>Il n’y a pas de commentaires</p>
+    {% endif %}
+  </fieldset>
   <input class="btn" type="submit" value="Modifier"/>
 </form>
 {% endblock %}

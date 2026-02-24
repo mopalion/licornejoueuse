@@ -207,3 +207,5 @@ class CommentForm(forms.ModelForm):
         widgets = {
             "text": UnicornTextAreaWidget(),
         }
+
+CommentForms = forms.modelformset_factory(Comment, form=CommentForm, extra=0, can_delete=True)
