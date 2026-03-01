@@ -462,3 +462,32 @@ def comment_added(request):
     """
 
     return render(request, "games/comment_added.html")
+
+@login_required
+def delete_game(request, number):
+    """
+    Propose to delete the game with number number
+
+    Args:
+        request: Django Request object.
+        number: number of game to delete
+    Returns:
+        The delete page or redirect if game is deleted
+    """
+    game = Game.objects.get(number=number)
+    if request.method == "POST":
+        game.delete()
+        return redirect("game_deleted")
+    return render(request, "games/delete_game.html", {"game": game})
+
+@login_required
+def game_deleted(request):
+    """
+    Validate the deletion of a game
+
+    Args:
+        request: Django Request object.
+    Returns:
+        The validation of deleted game page
+    """
+    return render(request, "games/game_deleted.html")
