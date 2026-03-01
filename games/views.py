@@ -208,7 +208,7 @@ def print_labels(request):
     """
     selected_games = get_selected_games(request.POST)
 
-    if selected_games == []:
+    if not selected_games:
         return redirect("inventory_index")
 
     games = Game.objects.filter(number__in=selected_games)
