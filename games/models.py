@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from io import StringIO
 from datetime import date
 from .tools import generate_qrcode
@@ -91,7 +92,7 @@ class Game(models.Model):
     details = models.TextField(blank=True)
     entry_year = models.PositiveIntegerField(blank=False, null=True)
     number = models.PositiveIntegerField("Number", blank=False, unique=True)
-    price = models.FloatField(blank=True, null=True)
+    price = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)])
     year = models.PositiveIntegerField(blank=True, null=True)
     myludo_path = models.CharField(max_length=200, blank=True, null=True)
     cards_number = models.PositiveIntegerField(blank=True,null=True)
