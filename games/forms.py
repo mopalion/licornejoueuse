@@ -76,7 +76,8 @@ class BatchForm(forms.Form):
     def __init__(self, locations, labels, *args, **kwargs):
         super().__init__(*args, **kwargs)
         labels_choices = [(x.label,x.label) for x in labels]
-        self.fields["labels"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels", widget=UnicornSelectMultipleWidget)
+        self.fields["labels"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels à ajouter", widget=UnicornSelectMultipleWidget)
+        self.fields["labels_to_remove"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels à retirer", widget=UnicornSelectMultipleWidget)
         locations = [(x.name,x.name) for x in locations]
         locations.insert(0,("", "---"))
         self.fields["location"] = forms.ChoiceField(required=False, label="Localisation", choices=locations, widget=UnicornSelectWidget)

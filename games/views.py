@@ -182,8 +182,12 @@ def batch(request):
         for game in games:
             if "labels" in request.POST and request.POST["labels"]:
                 for label_name in request.POST.getlist("labels"):
-                    label = Label.objects.filter(label=label_name)[0]
+                    label = Label.objects.get(label=label_name)
                     game.labels.add(label)
+            if "labels_to_remove" in request.POST and request.POST["labels_to_remove"]:
+                for label_name in request.POST.getlist("labels_to_remove"):
+                    label = Label.objects.get(label=label_name)
+                    game.labels.remove(label)
             if "location" in request.POST and request.POST["location"]:
                 location = Location.objects.get(name=request.POST["location"])
                 game.location = location
