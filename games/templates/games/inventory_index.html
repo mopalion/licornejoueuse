@@ -8,41 +8,48 @@
 <!-- Bandeau d’actions de l’inventaire  -->
 <div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10 flex-wrap place-content-around">
   <a href="#modal_filter" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list</span></a>
-  <div id="modal_filter" class="modal block bg-orange-300" role="dialog">
-      {{ filter_form.as_p }}
-
-      <button type="button" onclick="empty_filters()" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list_off</span></button>
-      <input type="submit" value="Filtrer" class="btn">
-      <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
-  </div>
-  <div class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
+  <div class="btn btn-outline m-2 border-orange-500 border-2 flex-1 z-60"><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
   <a href="#modal_shortcuts" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">align_center</span></a>
-  <div id="modal_shortcuts" class="modal block" role="dialog">
-        {% for hundred in shortcuts %}
-          <div class="flex mt-0 mb-0 place-content-around">
-          {% for quart in hundred %}
-          <button class="btn w-10 border-orange-500 border-2 m-1" type="button"><a href="#tr-{{ quart.1 }}">{{ quart.0 }}</a></button>
-          {% endfor %}
-          </div>
-        {% endfor %}
-        <div class="mt-0 mb-0 place-content-around">
-          <button class="btn border-orange-500 border-2 m-1 w-8/10 m-auto block" type="button"><a class="block w-full" href="#">Retour</a></button>
-        </div>
-  </div>
   <a href="#modal_action" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">action_key</span></a>
   <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="save_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">save</span></button>
   <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="load_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">sync_saved_locally</span></button>
-  <div id="modal_action" class="modal block bg-orange-300" role="dialog">
-      <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
-      <br>
-      <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
-      <br>
-      <input type="submit" value="Go" class="btn m-2">
-      <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
-  </div>
 
 </div>
 <!-- Fin du bandeau d’actions -->
+
+<!-- début modal shortcuts -->
+<div id="modal_shortcuts" class="modal block z-60" role="dialog">
+      {% for hundred in shortcuts %}
+        <div class="flex mt-0 mb-0 place-content-around">
+        {% for quart in hundred %}
+        <button class="btn w-10 border-orange-500 border-2 m-1" type="button"><a href="#tr-{{ quart.1 }}">{{ quart.0 }}</a></button>
+        {% endfor %}
+        </div>
+      {% endfor %}
+      <div class="mt-0 mb-0 place-content-around">
+        <button class="btn border-orange-500 border-2 m-1 w-8/10 m-auto block" type="button"><a class="block w-full" href="#">Retour</a></button>
+      </div>
+</div>
+<!-- Fin modal shortcuts -->
+<!-- Début modal actions de masses -->
+<div id="modal_action" class="modal block bg-orange-300 z-60" role="dialog">
+    <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
+    <br>
+    <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
+    <br>
+    <input type="submit" value="Go" class="btn m-2">
+    <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
+</div>
+<!-- Fin modal actions de masses -->
+<!-- Début modal filtrage -->
+<div id="modal_filter" class="modal block bg-orange-300 z-60" role="dialog">
+    {{ filter_form.as_p }}
+
+    <button type="button" onclick="empty_filters()" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list_off</span></button>
+    <input type="submit" value="Filtrer" class="btn">
+    <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
+</div>
+<!-- Fin modal filtrage -->
 
 {% if selected_games_to_display %}
 <div class="flex justify-center">
