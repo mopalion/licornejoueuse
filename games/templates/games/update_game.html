@@ -2,6 +2,20 @@
 {% block content %}
 <form action="{% url 'update_game' game.number %}" method="post" enctype="multipart/form-data" class="bg-zinc-200">
   {% csrf_token %}
+  <input type="hidden" name="modifications_hash" value="{{ modifications_hash }}"/>
+
+  {% if modifications %}
+  <div role="alert" class="alert alert-info m-2">
+    <ul>
+      {% for modification in modifications %}
+      <li>{{ modification }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    <button type="submit" class="btn">Confirmer</button>
+  </div>
+  {% endif %}
+
   {{ form }}
   <fieldset class="fieldset m-2">
     <legend class="fieldset-legend text-zinc-950 font-black">Commentaires</legend>
