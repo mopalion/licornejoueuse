@@ -210,12 +210,12 @@ def batch(request):
                 if object_modification:
                     game.location = location
                     game.save()
-                if "labels à ajouter" in modifications:
-                    for label_name in modifications["labels à ajouter"]:
+                if "labels à ajouter" in modifications["lists"]:
+                    for label_name in modifications["lists"]["labels à ajouter"]:
                         label = Label.objects.get(label=label_name)
                         game.labels.add(label)
-                if "labels à retirer" in modifications:
-                    for label_name in modifications["labels à retirer"]:
+                if "labels à retirer" in modifications["lists"]:
+                    for label_name in modifications["lists"]["labels à retirer"]:
                         label = Label.objects.get(label=label_name)
                         game.labels.remove(label)
 
