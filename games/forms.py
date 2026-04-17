@@ -2,7 +2,7 @@ from django import forms
 import datetime
 from copy import copy
 
-from games.models import Game, COL_CHOICES, COL_SUB
+from games.models import Game, COL_CHOICES, COL_SUB, Comment
 
 class UnicornTextInputWidget(forms.TextInput):
     """
@@ -10,7 +10,7 @@ class UnicornTextInputWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 input"
+            "class": "text-zinc-200 bg-zinc-800 input"
         })
 
 class UnicornSelectWidget(forms.Select):
@@ -19,7 +19,7 @@ class UnicornSelectWidget(forms.Select):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 select"
+            "class": "text-zinc-200 bg-zinc-800 select"
         })
 
 class UnicornSelectMultipleWidget(forms.SelectMultiple):
@@ -28,7 +28,7 @@ class UnicornSelectMultipleWidget(forms.SelectMultiple):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 select"
+            "class": "text-zinc-200 bg-zinc-800 select"
         })
 
 class UnicornTextAreaWidget(forms.Textarea):
@@ -37,7 +37,7 @@ class UnicornTextAreaWidget(forms.Textarea):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 textarea w-full"
+            "class": "text-zinc-800 bg-zinc-200 textarea w-full border-1 border-solid border-zinc-800"
         })
 
 class GameFilterForm(forms.Form):
@@ -76,7 +76,8 @@ class BatchForm(forms.Form):
     def __init__(self, locations, labels, *args, **kwargs):
         super().__init__(*args, **kwargs)
         labels_choices = [(x.label,x.label) for x in labels]
-        self.fields["labels"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels", widget=UnicornSelectMultipleWidget)
+        self.fields["labels"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels à ajouter", widget=UnicornSelectMultipleWidget)
+        self.fields["labels_to_remove"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels à retirer", widget=UnicornSelectMultipleWidget)
         locations = [(x.name,x.name) for x in locations]
         locations.insert(0,("", "---"))
         self.fields["location"] = forms.ChoiceField(required=False, label="Localisation", choices=locations, widget=UnicornSelectWidget)
@@ -87,7 +88,7 @@ class GameNameWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 input border-orange-500 border-2 mt-2 mb-2 text-xl font-black m-auto block",
+            "class": "text-zinc-800 input border-orange-500 border-2 mt-2 mb-2 text-xl font-black m-auto block bg-zinc-200",
             "placeholder": "Nom du jeu",
         })
 
@@ -97,7 +98,7 @@ class MyludoPathWidget(forms.TextInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800",
+            "class": "text-zinc-800 bg-zinc-200",
             "placeholder": "#!/game/12345",
         })
 
@@ -107,7 +108,7 @@ class ImageWidget(forms.FileInput):
     """
     def __init__(self):
         super().__init__(attrs={
-            "class": "text-zinc-800 file-input",
+            "class": "text-zinc-950 bg-zinc-200 file-input",
         })
 
 class GameForm(forms.ModelForm):
@@ -190,7 +191,22 @@ class GameForm(forms.ModelForm):
             "number": forms.TextInput(),
             "price": forms.TextInput(),
             "details": UnicornTextAreaWidget(),
-            "year": UnicornTextInputWidget(),
+            "year": forms.TextInput(),
             "myludo_path": MyludoPathWidget(),
             "image": ImageWidget(),
         }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            "text",
+        ]
+        labels = {
+            "text": "texte",
+        }
+        widgets = {
+            "text": UnicornTextAreaWidget(),
+        }
+
+CommentForms = forms.modelformset_factory(Comment, form=CommentForm, extra=0, can_delete=True)

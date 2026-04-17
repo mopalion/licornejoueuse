@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from io import StringIO
 from datetime import date
 from .tools import generate_qrcode
@@ -89,9 +90,9 @@ class Game(models.Model):
     time = models.CharField(max_length=10, blank=True)
     players_number = models.CharField(max_length=10, blank=True)
     details = models.TextField(blank=True)
-    entry_year = models.PositiveIntegerField(blank=False, null=False)
+    entry_year = models.PositiveIntegerField(blank=False, null=True, validators=[MinValueValidator(2013)])
     number = models.PositiveIntegerField("Number", blank=False, unique=True)
-    price = models.FloatField(blank=True, null=True)
+    price = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)])
     year = models.PositiveIntegerField(blank=True, null=True)
     myludo_path = models.CharField(max_length=200, blank=True, null=True)
     cards_number = models.PositiveIntegerField(blank=True,null=True)
@@ -99,7 +100,7 @@ class Game(models.Model):
     origin = models.CharField(max_length=100, blank=True, null=True)
     qrcode = models.ImageField(upload_to="qrcode", blank=True)
     image = models.ImageField(upload_to="games_images", blank=True)
-    age = models.CharField(max_length=10)
+    age = models.CharField(max_length=10, blank=True, null=True)
     game_type = models.CharField(max_length=20, default="boardgame", choices=[("boardgame","jds"), ("rpg","jdr"), ("wooden", "bois"), ("toys", "jouet")])
     last_inventory_date = models.DateField("last inventory date", blank=True, null=True)
     rules_video_link = models.CharField(max_length=100, blank=True, null=True)
@@ -144,6 +145,9 @@ class Comment(models.Model):
     text = models.TextField()
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     created_date = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.game.number}-{self.created_date.strftime('%y%m%d%H%M')}-{self.text[:20]}"
 
     def csv_data(self):
         return f"{csv_sanitize(self.game.number)};{csv_sanitize(self.created_date)};{csv_sanitize(self.text)}"

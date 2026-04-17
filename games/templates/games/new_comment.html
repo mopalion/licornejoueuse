@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>{{ game.name }} : Nouveau commentaire</h1>
+<form action="{% url 'new_comment' game.number %}" method="post">
+  {% csrf_token %}
+  {{ form }}
+<button type="submit" class="btn">Ajouter</button>
+</form>
+{% endblock %}

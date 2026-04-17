@@ -19,6 +19,7 @@
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-zinc-50: oklch(98.5% 0 0);
     --color-zinc-100: oklch(96.7% 0.001 286.375);
+    --color-zinc-200: oklch(92% 0.004 286.32);
     --color-zinc-500: oklch(55.2% 0.016 285.938);
     --color-zinc-800: oklch(27.4% 0.006 286.033);
     --color-zinc-900: oklch(21% 0.006 285.885);
@@ -191,6 +192,61 @@
   }
 }
 @layer utilities {
+  @layer daisyui.l1.l2.l3 {
+    .modal {
+      pointer-events: none;
+      visibility: hidden;
+      position: fixed;
+      inset: calc(0.25rem * 0);
+      margin: calc(0.25rem * 0);
+      display: grid;
+      height: 100%;
+      max-height: none;
+      width: 100%;
+      max-width: none;
+      align-items: center;
+      justify-items: center;
+      background-color: transparent;
+      padding: calc(0.25rem * 0);
+      color: inherit;
+      transition: visibility 0.3s allow-discrete, background-color 0.3s ease-out, opacity 0.1s ease-out;
+      overflow: clip;
+      overscroll-behavior: contain;
+      z-index: 999;
+      scrollbar-gutter: auto;
+    }
+    .modal::backdrop {
+      display: none;
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .modal.modal-open, .modal[open], .modal:target, .modal-toggle:checked + .modal {
+      pointer-events: auto;
+      visibility: visible;
+      opacity: 100%;
+      transition: visibility 0s allow-discrete, background-color 0.3s ease-out, opacity 0.1s ease-out;
+      background-color: oklch(0% 0 0/ 0.4);
+    }
+    .modal.modal-open .modal-box, .modal[open] .modal-box, .modal:target .modal-box, .modal-toggle:checked + .modal .modal-box {
+      translate: 0 0;
+      scale: 1;
+      opacity: 1;
+    }
+    :root:has(.modal.modal-open), :root:has(.modal[open]), :root:has(.modal:target), :root:has(.modal-toggle:checked + .modal) {
+      --page-has-backdrop: 1;
+      --page-overflow: hidden;
+      --page-scroll-bg: var(--page-scroll-bg-on);
+      --page-scroll-gutter: stable;
+      --page-scroll-transition: var(--page-scroll-transition-on);
+      animation: set-page-has-scroll forwards;
+      animation-timeline: scroll();
+    }
+    @starting-style {
+      .modal.modal-open, .modal[open], .modal:target, .modal-toggle:checked + .modal {
+        opacity: 0%;
+      }
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     :where(.drawer-side) {
       overflow-x: hidden;
@@ -1633,6 +1689,9 @@
   .static {
     position: static;
   }
+  .sticky {
+    position: sticky;
+  }
   @layer daisyui.l1.l2 {
     .toast-end {
       inset-inline-start: auto;
@@ -1646,6 +1705,9 @@
       bottom: auto;
       --toast-y: 0;
     }
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
   }
   @layer daisyui.l1.l2.l3 {
     .file-input {
@@ -1879,32 +1941,17 @@
   .z-50 {
     z-index: 50;
   }
+  .z-55 {
+    z-index: 55;
+  }
+  .z-60 {
+    z-index: 60;
+  }
   @layer daisyui.l1.l2.l3 {
     .drawer-content {
       grid-column-start: 2;
       grid-row-start: 1;
       min-width: calc(0.25rem * 0);
-    }
-  }
-  @layer daisyui.l1.l2 {
-    .drawer-end {
-      grid-auto-columns: auto max-content;
-    }
-    .drawer-end > .drawer-toggle ~ .drawer-content {
-      grid-column-start: 1;
-    }
-    .drawer-end > .drawer-toggle ~ .drawer-side {
-      grid-column-start: 2;
-      justify-items: end;
-    }
-    .drawer-end > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
-      translate: 100%;
-    }
-    [dir="rtl"] .drawer-end > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
-      translate: -100%;
-    }
-    .drawer-end > .drawer-toggle:checked ~ .drawer-side > :not(.drawer-overlay) {
-      translate: 0%;
     }
   }
   .container {
@@ -2036,6 +2083,9 @@
       }
     }
   }
+  .mt-0 {
+    margin-top: calc(var(--spacing) * 0);
+  }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
@@ -2056,6 +2106,9 @@
       color: var(--color-base-content);
       font-weight: 600;
     }
+  }
+  .mb-0 {
+    margin-bottom: calc(var(--spacing) * 0);
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
@@ -2142,6 +2195,15 @@
     }
   }
   @layer daisyui.l1.l2.l3 {
+    .chat {
+      display: grid;
+      grid-auto-rows: min-content;
+      column-gap: calc(0.25rem * 3);
+      padding-block: calc(0.25rem * 1);
+      --mask-chat: url("data:image/svg+xml,%3csvg width='13' height='13' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='M0 11.5004C0 13.0004 2 13.0004 2 13.0004H12H13V0.00036329L12.5 0C12.5 0 11.977 2.09572 11.8581 2.50033C11.6075 3.35237 10.9149 4.22374 9 5.50036C6 7.50036 0 10.0004 0 11.5004Z'/%3e%3c/svg%3e");
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
     .card-actions {
       display: flex;
       flex-wrap: wrap;
@@ -2167,6 +2229,15 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-200 {
+    max-height: calc(var(--spacing) * 200);
+  }
+  .w-8\/10 {
+    width: calc(8/10 * 100%);
+  }
+  .w-10 {
+    width: calc(var(--spacing) * 10);
+  }
   .w-19 {
     width: calc(var(--spacing) * 19);
   }
@@ -2178,6 +2249,9 @@
   }
   .w-45 {
     width: calc(var(--spacing) * 45);
+  }
+  .w-50 {
+    width: calc(var(--spacing) * 50);
   }
   .w-55 {
     width: calc(var(--spacing) * 55);
@@ -2206,9 +2280,6 @@
   .flex-auto {
     flex: auto;
   }
-  .grow {
-    flex-grow: 1;
-  }
   @layer daisyui.l1.l2.l3 {
     .link {
       cursor: pointer;
@@ -2229,6 +2300,12 @@
       outline-offset: 2px;
     }
   }
+  .list-inside {
+    list-style-position: inside;
+  }
+  .list-disc {
+    list-style-type: disc;
+  }
   .flex-wrap {
     flex-wrap: wrap;
   }
@@ -2244,16 +2321,24 @@
   .justify-end {
     justify-content: flex-end;
   }
-  .overflow-x-auto {
-    overflow-x: auto;
+  .overflow-auto {
+    overflow: auto;
   }
   .rounded-t-none {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
+  .border-1 {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
+  }
+  .border-solid {
+    --tw-border-style: solid;
+    border-style: solid;
   }
   .border-blue-200 {
     border-color: var(--color-blue-200);
@@ -2264,18 +2349,8 @@
   .border-orange-500 {
     border-color: var(--color-orange-500);
   }
-  @layer daisyui.l1.l2 {
-    .table-zebra tbody tr:where(:nth-child(even)) {
-      background-color: var(--color-base-200);
-    }
-    .table-zebra tbody tr:where(:nth-child(even)) :where(.table-pin-cols tr th) {
-      background-color: var(--color-base-200);
-    }
-    @media (hover: hover) {
-      .table-zebra tbody tr.row-hover:hover, .table-zebra tbody tr.row-hover:where(:nth-child(even)):hover {
-        background-color: var(--color-base-300);
-      }
-    }
+  .border-zinc-800 {
+    border-color: var(--color-zinc-800);
   }
   .bg-base-100 {
     background-color: var(--color-base-100);
@@ -2301,6 +2376,12 @@
   .bg-zinc-50 {
     background-color: var(--color-zinc-50);
   }
+  .bg-zinc-200 {
+    background-color: var(--color-zinc-200);
+  }
+  .bg-zinc-800 {
+    background-color: var(--color-zinc-800);
+  }
   .bg-zinc-900 {
     background-color: var(--color-zinc-900);
   }
@@ -2312,6 +2393,12 @@
   }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
+  }
+  .pr-10 {
+    padding-right: calc(var(--spacing) * 10);
+  }
+  .pl-10 {
+    padding-left: calc(var(--spacing) * 10);
   }
   .font-serif {
     font-family: var(--font-serif);
@@ -2369,6 +2456,9 @@
   }
   .text-zinc-50 {
     color: var(--color-zinc-50);
+  }
+  .text-zinc-200 {
+    color: var(--color-zinc-200);
   }
   .text-zinc-500 {
     color: var(--color-zinc-500);

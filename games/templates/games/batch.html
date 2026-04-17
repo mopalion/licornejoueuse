@@ -5,6 +5,26 @@
   {% csrf_token %}
   <input type="hidden" name="go" value="go">
   <input name="selected_games" type="hidden" value="{{ selected_games_ids | join:',' }}" />
+  <input type="hidden" name="modifications_hash" value="{{ modifications_hash }}"/>
+
+  {% if modifications_hash != "" and modifications_hash != "8f32ee2728e5d38c89c93b85a5eb7390b5ccb661348d225156862d90eee9d302752e0de207dfdbd9a212b6e22f9a5128e83c142a436f93c399dd8afb9b227668" %}
+  <div role="alert" class="alert alert-info m-2">
+    <ul>
+      {% for modification in modifications.lists.items %}
+      <li>{{ modification.0 }}
+        <ul class="list-disc list-inside">{% for elem in modification.1 %}<li>{{ elem }}</li>{% endfor %}</ul>
+      </li>
+      {% endfor %}
+
+      {% for modification in modifications.values.items %}
+      <li>{{ modification.0 }} =>  {{ modification.1 }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    <button type="submit" class="btn">Confirmer</button>
+  </div>
+  {% endif %}
+
   {{ form.as_p }}
   <input type="submit" class="btn" value="Enregistrer">
 </form><

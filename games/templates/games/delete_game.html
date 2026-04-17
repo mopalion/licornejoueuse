@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block content %}
+<form action="{% url 'delete_game' game.number %}" method="post">
+  {% csrf_token %}
+<p>
+  Voulez-vous supprimer le jeu numéro  {{ game.number }} - {{ game.name }} ?
+</p>
+<button type="submit" class="btn m-2">Confirmer</button>
+</form>
+{% endblock %}

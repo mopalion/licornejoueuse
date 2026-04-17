@@ -4,38 +4,53 @@
   {% csrf_token %}
   <input name="selected_games" type="hidden" value="{{ selected_games | join:',' }}" />
 <h1>Inventaire des jeux de la Licorne</h1>
-<div class="flex">
-  <aside class="drawer grow">
-    <input id="drawer-filtre" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <label for="drawer-filtre" class="btn btn-outline drawer-button m-2 border-orange-500 border-2">Filtrage</label>
-    </div>
-    <div class="drawer-side bg-orange-300">
-      <label for="drawer-filtre" aria-labl="close sidebar" class="drawer-overlay"></label>
-      <div>
-      {{ filter_form.as_p }}
-      <input type="submit" value="Filtrer" class="btn">
-      </div>
-    </div>
-  </aside>
-  <div><a href="{% url 'add_game' %}"><span class="material-icons text-base">control_point</span></a></div>
-  <aside class="drawer drawer-end grow justify-end">
-    <input id="drawer-action" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <label for="drawer-action" class="btn btn-outline drawer-button m-2 border-orange-500 border-2">Actions</label>
-    </div>
-    <div class="drawer-side bg-orange-300">
-      <label for="drawer-action" aria-labl="close sidebar" class="drawer-overlay"></label>
-      <div class="">
-        <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
-        <br>
-        <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
-        <br>
-        <input type="submit" value="Go" class="btn m-2">
-      </div>
-    </div>
-  </aside>
+
+<!-- Bandeau d’actions de l’inventaire  -->
+<div class="flex sticky top-0 z-50 bg-zinc-50 w-full pl-10 pr-10 flex-wrap place-content-around">
+  <a href="#modal_filter" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list</span></a>
+  <div class="btn btn-outline m-2 border-orange-500 border-2 flex-1 z-60"><a href="{% url 'add_game' %}"><span class="material-symbols-outlined text-base">add_circle</span></a></div>
+  <a href="#modal_shortcuts" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">align_center</span></a>
+  <a href="#modal_action" class="block btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">action_key</span></a>
+  <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="save_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">save</span></button>
+  <button class="btn btn-outline m-2 border-orange-500 border-2 flex-1" name="load_btn" value="true" type="submit"><span class="material-symbols-outlined text-base">sync_saved_locally</span></button>
+
 </div>
+<!-- Fin du bandeau d’actions -->
+
+<!-- début modal shortcuts -->
+<div id="modal_shortcuts" class="modal block z-60" role="dialog">
+      {% for hundred in shortcuts %}
+        <div class="flex mt-0 mb-0 place-content-around">
+        {% for quart in hundred %}
+        <button class="btn w-10 border-orange-500 border-2 m-1" type="button"><a href="#tr-{{ quart.1 }}">{{ quart.0 }}</a></button>
+        {% endfor %}
+        </div>
+      {% endfor %}
+      <div class="mt-0 mb-0 place-content-around">
+        <button class="btn border-orange-500 border-2 m-1 w-8/10 m-auto block" type="button"><a class="block w-full" href="#">Retour</a></button>
+      </div>
+</div>
+<!-- Fin modal shortcuts -->
+<!-- Début modal actions de masses -->
+<div id="modal_action" class="modal block bg-orange-300 z-60" role="dialog">
+    <input class="radio bg-pink-100 mr-2" type="radio" id="batch" name="actions" value="batch" /><label for="batch">Modification en masse</label>
+    <br>
+    <input class="radio bg-pink-100 mr-2" type="radio" id="print_labels" name="actions" value="print_labels" /><label for="print_labels">Impression des étiquettes</label>
+    <br>
+    <input type="submit" value="Go" class="btn m-2">
+    <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
+</div>
+<!-- Fin modal actions de masses -->
+<!-- Début modal filtrage -->
+<div id="modal_filter" class="modal block bg-orange-300 z-60" role="dialog">
+    {{ filter_form.as_p }}
+
+    <button type="button" onclick="empty_filters()" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">filter_list_off</span></button>
+    <input type="submit" value="Filtrer" class="btn">
+    <a href="#" class="btn btn-outline m-2 border-orange-500 border-2 flex-1"><span class="material-symbols-outlined text-base">close</span></a>
+</div>
+<!-- Fin modal filtrage -->
+
 {% if selected_games_to_display %}
 <div class="flex justify-center">
 <section class="collapse">
@@ -43,7 +58,7 @@
   <div class="collapse-title btn btn-outline w-55 m-auto border-orange-500 border-2">Jeux sélectionnés filtrés</div>
   <div class="collapse-content">
     <table class="table">
-      <thead>
+      <thead class="z-50 bg-zinc-50">
         <tr class="text-zinc-500">
           <th></th>
           <th>Numéro</th>
@@ -68,13 +83,14 @@
 </section>
 </div>
 {% endif %}
-<section class="overflow-x-auto text-zinc-800">
-  <table class="table table-zebra">
-    <thead>
+<section class="overflow-auto text-zinc-800 max-h-200">
+  <table class="table">
+    <thead class="sticky top-0 bg-zinc-50 z-50">
       <tr class="text-zinc-500">
         <th></th>
         <th>Numéro</th>
         <th>Nom</th>
+        <th></th>
         <th>Localisation</th>
         <th>Année de sortie</th>
       </tr>
@@ -82,9 +98,10 @@
     <tbody>
       {% for game in games %}
       <tr>
-        <td><input name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
+        <td><input id="tr-{{ game.number }}" name="selected-game-{{ game.number }}" {% if game.number in current_selected_games %}checked{% endif %} type="checkbox" class="checkbox border-orange-500 text-orange-500 border-2 checked:bg-orange-500 checked:text-zinc-100" />
         <td>{{ game.number }}</td>
-        <td><a href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
+        <td><a class="link" href="{% url 'update_game' game.number %}">{{ game.name }}</a></td>
+        <td><a href="{% url 'new_comment' game.number %}" class="material-symbols-outlined" target="_blank">chat</a></td>
         <td>{{ game.location }}</td>
         <td>{{ game.year }}</td>
       </tr>
@@ -93,9 +110,30 @@
   </table>
   {% if not games %}
     <div role="alert" class="alert alert-error w-80 m-auto mb-2">
-      <p class=""><span class="material-icons text-base">crisis_alert</span>Aucun jeux n’est ressorti du filtrage.</p>
+      <p class=""><span class="material-symbols-outlined text-base">crisis_alert</span>Aucun jeux n’est ressorti du filtrage.</p>
     </div>
   {% endif %}
 </section>
 </form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  const filter_elems = [];
+  filter_elems.push(
+    ["#id_name", ""],
+    ["#id_min_number", ""],
+    ["#id_max_number", ""],
+    ["#id_location", "---"],
+    ["#id_min_entry_year", "---"],
+    ["#id_max_entry_year", "---"],
+    ["#id_labels", ""],
+  );
+  function empty_filters() {
+    filter_elems.forEach((selector) => {
+      elem = document.querySelector(selector[0]);
+      elem.value = selector[1];
+    });
+  }
+</script>
 {% endblock %}

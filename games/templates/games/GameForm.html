@@ -11,70 +11,70 @@
     </div>
   {% endfor %}
 </div>
-<div class="border-orange-400 border-2 m-1">
+<div class="border-orange-400 border-2 m-1 ">
   <div class="flex flex-wrap">
     <div class="flex-1">
-      <label class="input m-1 w-45">
+      <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-20">Numéro</span>
         {{ form.number }}
       </label>
       <br>
-      <label class="input m-1 w-45">
+      <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-19">Lieu</span>
         {{ form.location }}
       </label>
       <br>
-      <label class="input m-1 w-45">
+      <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-19">Type</span>
         {{ form.game_type }}
       </label>
       <br>
-      <label class="input m-1 w-55">
+      <label class="input m-1 w-55 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-30">Origine</span>
         {{ form.origin }}
       </label>
     </div>
     <div class="flex-1">
-      <label class="input m-1 w-55">
+      <label class="input m-1 w-55 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-190">Prix</span>
         {{ form.price }}
         <span class="label">€</span>
-      </label>
+      </label
       <br>
-      <label class="input m-1 w-55">
+      <label class="input m-1 w-55 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-30">Date d’obtention</span>
         {{ form.entry_year }}
       </label>
       <br>
-      <label class="input m-1 w-55">
+      <label class="input m-1 w-55 bg-zinc-200 text-zinc-950 font-black">
         <span class="">Pour enfants</span>
         {{ form.for_child }}
       </label>
       <br>
-      <label class="input m-1 w-55">
+      <label class="input m-1 w-55 bg-zinc-200 text-zinc-950 font-black">
         <span class="">Dernier inventaire</span>
         {{ form.last_inventory_date }}
       </label>
     </div>
-    <div class="flex-1 border-blue-200 bg-blue-100 border-2 p-2 m-2">
+    <div class="flex-1 border-blue-200 bg-blue-100 border-2 p-2 m-2 bg-zinc-200 text-zinc-950 font-black">
       {{ form.labels }}
     </div>
 
   </div>
   <div class="flex flex-wrap">
     <div>
-      <label class="input m-1">
+      <label class="input m-1 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-75">https://www.myludo.fr/</span>
         {{ form.myludo_path }}
       </label>
       <br>
-      <label class="input m-1">
+      <label class="input m-1 bg-zinc-200 text-zinc-950 font-black">
         <span class="label w-75">Lien règle vidéo</span>
         {{ form.rules_video_link }}
       </label>
     </div>
     <div>
-      <label>Image :
+      <label class="bg-zinc-200 text-zinc-950 font-black">Image :
       {{ form.image }}
       </label>
     </div>
@@ -82,86 +82,86 @@
 </div>
 <div class="flex flex-wrap">
   <div class="flex-1">
-    <label class="input m-1 w-45">
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
       <span class="label w-19">Durée</span>
       {{ form.time }}
       <span class="label">min</span>
     </label>
     <br>
-    <label class="input m-1 w-45">
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
       <span class="label w-19">Nb joueurs</span>
       {{ form.players_number }}
     </label>
     <br>
-    <label class="input m-1 w-45">
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
       <span class="label w-19">Âge</span>
       {{ form.age }}
     </label>
   </div>
   <div class="flex-1">
-    <label class="input m-1 w-45">
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
       <span class="label w-19">Nb cartes</span>
       {{ form.cards_number }}
     </label>
     <br>
-    <label class="input m-1 w-45">
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
       <span class="label w-19">Taille cartes</span>
       {{ form.cards_size }}
     </label>
     <br>
-    <label class="input m-1 w-45">
-      <span class="label w-19">Année de sortie</span>
+    <label class="input m-1 w-45 bg-zinc-200 text-zinc-950 font-black">
+      <span class="label w-50">Année de sortie</span>
       {{ form.year }}
     </label>
   </div>
 </div>
 <div class="flex flex-wrap">
   <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
-    <legend class="fieldset-legend">Thèmes</legend>
+    <legend class="fieldset-legend text-zinc-950 font-black">Thèmes</legend>
     {{ form.themes }}
   </fieldset>
   <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
-    <legend class="fieldset-legend">Mécanismes</legend>
+    <legend class="fieldset-legend text-zinc-950 font-black">Mécanismes</legend>
     {{ form.mechanisms }}
   </fieldset>
 </div>
 <div class="flex flex-wrap">
   <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
-    <legend class="fieldset-legend">Auteurs</legend>
+    <legend class="fieldset-legend text-zinc-950 font-black">Auteurs</legend>
     {{ form.authors }}
   </fieldset>
   <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
-    <legend class="fieldset-legend">Illustrateurs</legend>
+    <legend class="fieldset-legend text-zinc-950 font-black">Illustrateurs</legend>
     {{ form.illustrators }}
   </fieldset>
   <fieldset class="fieldset m-2 flex-1 border-blue-200 bg-blue-100 border-2 p-2">
-    <legend class="fieldset-legend">Éditeurs</legend>
+    <legend class="fieldset-legend text-zinc-950 font-black">Éditeurs</legend>
     {{ form.editors }}
   </fieldset>
 </div>
 <fieldset class="fieldset m-2">
-  <legend class="fieldset-legend">Description</legend>
+  <legend class="fieldset-legend text-zinc-950 font-black">Description</legend>
   {{ form.details }}
 </fieldset>
 <fieldset class="fieldset m-2">
-  <legend class="fieldset-legend">Inventaire</legend>
+  <legend class="fieldset-legend text-zinc-950 font-black">Inventaire</legend>
   {{ form.inventory }}
 </fieldset>
 <fieldset class="fieldset m-2">
-  <legend class="fieldset-legend">Pièces manquantes</legend>
+  <legend class="fieldset-legend text-zinc-950 font-black">Pièces manquantes</legend>
   {{ form.missing_items }}
 </fieldset>
 <div class="flex flex-wrap bg-orange-200 m-2 place-content-around">
   <div class="m-auto w-20 flex-auto p-2">
-    <label>Classification d’objets ludiques</label><br>
+    <label class="text-zinc-950 font-black">Classification d’objets ludiques</label><br>
     {{ form.games_library_categorization }}
   </div>
   <div class="m-auto w-20 flex-auto p-2">
-    <label>Adapté 1</label><br>
+    <label class="text-zinc-950 font-black">Adapté 1</label><br>
       {{ form.adapted_games_library_categorization_1 }}
   </div>
   <div class="m-auto w-20 flex-auto p-2">
-    <label>Adapté 2</label><br>
+    <label class="text-zinc-950 font-black">Adapté 2</label><br>
       {{ form.adapted_games_library_categorization_2 }}
   </div>
 </div>

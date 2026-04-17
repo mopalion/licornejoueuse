@@ -6,12 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Max
 import segno
-from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm
+from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm, CommentForms
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
 from PIL import Image, ImageDraw, ImageFont
-from datetime import date
+from datetime import date, datetime
+from hashlib import sha512
+import pickle
+from itertools import chain
 
 from .models import Game,Location, Comment, Label
 
@@ -172,27 +175,74 @@ def batch(request):
     Returns:
         the form to select attributes to change or redirect to inventory page if attributes was modified.
     """
-    form = BatchForm(Location.objects.all(), Label.objects.all())
+    locations = Location.objects.all()
+    labels = Label.objects.all()
     selected_games = get_selected_games(request.POST)
+    modifications = {"lists": {}, "values": {}}
+    modifications_hash = ""
 
     if selected_games == []:
         return redirect("inventory_index")
     games = Game.objects.filter(number__in=selected_games)
+
     if "go" in request.POST:
-        for game in games:
-            if "labels" in request.POST and request.POST["labels"]:
-                for label_name in request.POST.getlist("labels"):
-                    label = Label.objects.filter(label=label_name)[0]
-                    game.labels.add(label)
-            if "location" in request.POST and request.POST["location"]:
-                location = Location.objects.get(name=request.POST["location"])
-                game.location = location
-                game.save()
-        return redirect("inventory_index")
+
+        object_modification = False
+        labels_modifications = []
+        if "labels" in request.POST and request.POST["labels"]:
+            for label_name in request.POST.getlist("labels"):
+                labels_modifications.append(label_name)
+            modifications["lists"]["labels à ajouter"] = labels_modifications
+        labels_modifications = []
+        if "labels_to_remove" in request.POST and request.POST["labels_to_remove"]:
+            for label_name in request.POST.getlist("labels_to_remove"):
+                labels_modifications.append(label_name)
+                modifications["lists"]["labels à retirer"] = labels_modifications
+        if "location" in request.POST and request.POST["location"]:
+            location = Location.objects.get(name=request.POST["location"])
+            modifications["values"]["Localisation"] = location.name
+            object_modification = True
+
+        modifications_hash = sha512(pickle.dumps(modifications)).hexdigest()
+        
+        if modifications_hash == request.POST["modifications_hash"]:
+            for game in games:
+                if object_modification:
+                    game.location = location
+                    game.save()
+                if "labels à ajouter" in modifications["lists"]:
+                    for label_name in modifications["lists"]["labels à ajouter"]:
+                        label = Label.objects.get(label=label_name)
+                        game.labels.add(label)
+                if "labels à retirer" in modifications["lists"]:
+                    for label_name in modifications["lists"]["labels à retirer"]:
+                        label = Label.objects.get(label=label_name)
+                        game.labels.remove(label)
+
+            return redirect("inventory_index")
+
+        initial_values = {}
+        if "labels à ajouter" in modifications["lists"]:
+            initial_values["labels"] = modifications["lists"]["labels à ajouter"]
+        if "labels à retirer" in modifications["lists"]:
+            initial_values["labels_to_remove"] = modifications["lists"]["labels à retirer"]
+        if "Localisation" in modifications["values"]:
+            initial_values["location"] = modifications["values"]["Localisation"]
+
+        form = BatchForm(
+            locations,
+            labels,
+            initial = initial_values,
+        )
+    else:
+        form = BatchForm(locations, labels)
+
     context = {
         "selected_games": games,
         "selected_games_ids": map(lambda x: x.number, games),
         "form": form,
+        "modifications": modifications,
+        "modifications_hash": modifications_hash,
     }
     return render(request, "games/batch.html", context)
     
@@ -208,7 +258,7 @@ def print_labels(request):
     """
     selected_games = get_selected_games(request.POST)
 
-    if selected_games == []:
+    if not selected_games:
         return redirect("inventory_index")
 
     games = Game.objects.filter(number__in=selected_games)
@@ -241,6 +291,10 @@ def select_games(request):
 
         selected_games = get_selected_games(request.POST)
 
+        if "save_btn" in request.POST:
+            request.session["selected_games"] = list(selected_games)
+        if "load_btn" in request.POST and "selected_games" in request.session:
+            selected_games = set(request.session["selected_games"])
         form = InventoryFilterForm(Location.objects.all(), Label.objects.all(), request.POST)
         if form.is_valid():
             # Apply differents filters to games.
@@ -287,19 +341,42 @@ def select_games(request):
             selected_games.remove(game.number)
     selected_games_to_display = Game.objects.filter(number__in=selected_games)
 
+    # Prepare shortcuts links
+    shortcuts = []
+    if games:
+        i_games = iter(games)
+        for hundred in range(0,999,100):
+            quarts = []
+            for quart in range(hundred, hundred +99, 25):
+                while True:
+                    try:
+                        game = next(i_games)
+                    except StopIteration:
+                        break
+                    value = game.number
+                    if value >= quart:
+                        break
+                quarts.append((quart, value))
+
+            shortcuts.append(quarts)
+
     context = {
         "games": games,
         "filter_form": form,
         "selected_games": selected_games,
         "selected_games_to_display": selected_games_to_display,
         "current_selected_games": current_selected_games,
+        "shortcuts": shortcuts,
     }
     return render(request, "games/inventory_index.html", context)
 
 @login_required
 def update_game(request, number):
     """
-    Allow user to update a game. Update game if post data was sent.
+    First call : display a form to update the game of number number
+
+    Second call: if form is valid, display modifications in top of the page and ask confirmation
+    Third call : update the game of number number and redirect to game_added
 
     Args:
         request: Django Request object.
@@ -309,24 +386,82 @@ def update_game(request, number):
     """
     game = Game.objects.get(number=number)
     errors = []
+    comments_errors = []
+    modifications = []
+    modifications_hash = ""
+
     if request.method == "POST":
-        form = GameForm(request.POST, request.FILES, instance=game)
+
+        comments_forms = CommentForms(request.POST)
+        if comments_forms.is_valid():
+            if comments_forms.has_changed():
+                modifications.append("Au moins un commentaire a été modifié.")
+            comments_form_is_valid = True
+        else:
+            comments_errors = comments_forms.errors
+            comments_form_is_valid = False
+
+        updated_game = Game.objects.get(number=number)
+        form = GameForm(request.POST, request.FILES, instance=updated_game)
         if form.is_valid():
-                
-            form.save()
-            return redirect("game_added", game.number)
+            # we get modifications on all fields except many_to_many relationships
+            for field in filter(lambda x: x not in ["id"], map(lambda x: x.name,Game._meta.fields)):
+                if field == "image":
+                    if "image" in request.FILES:
+                        #modifications.append(f"{field} => {getattr(updated_game, field).name}")
+                        pass
+                else:
+                    if getattr(updated_game, field) != getattr(game, field) and (getattr(updated_game, field) is not None or getattr(game, field) != ""):
+                        modifications.append(f"{form.fields[field].label} => {getattr(updated_game, field)}")
+
+            # we get modifications on many_to_many relationships
+            for field in filter(lambda x: x not in ["id"], map(lambda x: x.name, Game._meta.many_to_many)):
+                new_items = request.POST.getlist(field)
+                items_to_remove = []
+                for item in getattr(game, field).all():
+                    if str(item.id) not in new_items:
+                        items_to_remove.append(item)
+                    else:
+                        new_items.remove(str(item.id))
+                items_to_add = getattr(game, field).model.objects.filter(id__in=map(lambda x: int(x), new_items))
+
+                if items_to_add or items_to_remove:
+                    modification = f"{form.fields[field].label} => "
+                    for item in items_to_add:
+                        modification += f"+{item.name}"
+                    for item in items_to_remove:
+                        modification += f"-{item.name}"
+                    modifications.append(modification)
+
+
+            form_is_valid = True
         else:
             for error in form.errors.items():
                 detailed_error = (form.fields[error[0]].label, error[1])
                 form.errors[error[0]] = detailed_error
+            form_is_valid = False
+
+        modifications_hash = sha512(pickle.dumps(modifications)).hexdigest()
+        if comments_form_is_valid and form_is_valid and modifications_hash == request.POST["modifications_hash"]:
+            comments_forms.save()
+            form.save()
+            return redirect("game_added", updated_game.number)
+
     else:
         form = GameForm(instance=Game.objects.get(number=number))
+        comments_forms = CommentForms(queryset=Comment.objects.filter(game=game))
+
     context = {
         "game": game,
         "form": form,
+        "comments_forms": comments_forms,
         "errors": errors,
+        "comments_errors": comments_errors,
+        "modifications": modifications,
+        "modifications_hash": modifications_hash,
     }
     return render(request, "games/update_game.html", context)
+
 
 @login_required
 def add_game(request):
@@ -377,3 +512,73 @@ def game_added(request, number):
 
     game = Game.objects.get(number=number)
     return render(request, "games/game_added.html", {"game": game})
+
+@login_required
+def new_comment(request, number):
+    """
+    Add a new comment for the game with indicated number
+
+    Args:
+        request: Django Request object,
+        int: Number of the game that received new comment
+    Returns:
+        The form to add a new comment
+    """
+    form = None
+
+    game = Game.objects.get(number=number)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.created_date = datetime.now()
+            comment.game = game
+            comment.save()
+            return redirect("comment_added")
+
+    if form is None:
+        form = CommentForm()
+    return render(request, "games/new_comment.html", {"game": game, "form": form})
+
+@login_required
+def comment_added(request):
+    """
+    Display that a comment was added.
+
+    Args:
+        request: Django Request object.
+    Returns:
+        The confirmation of the upgrade.
+    """
+
+    return render(request, "games/comment_added.html")
+
+@login_required
+def delete_game(request, number):
+    """
+    Propose to delete the game with number number
+
+    Args:
+        request: Django Request object.
+        number: number of game to delete
+    Returns:
+        The delete page or redirect if game is deleted
+    """
+    game = Game.objects.get(number=number)
+    if request.method == "POST":
+        game.delete()
+        return redirect("game_deleted")
+    return render(request, "games/delete_game.html", {"game": game})
+
+@login_required
+def game_deleted(request):
+    """
+    Validate the deletion of a game
+
+    Args:
+        request: Django Request object.
+    Returns:
+        The validation of deleted game page
+    """
+    return render(request, "games/game_deleted.html")
