@@ -68,6 +68,7 @@ class InventoryFilterForm(forms.Form):
         self.fields["max_entry_year"] = forms.ChoiceField(choices=years, required=False, label="Année maximum", widget=UnicornSelectWidget)
         labels_choices = [(x.label,x.label) for x in labels]
         self.fields["labels"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels", widget=UnicornSelectMultipleWidget)
+        self.fields["labels_to_exclude"] = forms.MultipleChoiceField(choices=labels_choices, required=False, label="Labels à exclure", widget=UnicornSelectMultipleWidget)
 
 class BatchForm(forms.Form):
     """
