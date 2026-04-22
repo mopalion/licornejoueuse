@@ -327,6 +327,11 @@ def select_games(request):
                     games = Game.objects
                 for label in form.cleaned_data["labels"]:
                     games = games.filter(labels__label=label)
+            if "labels_to_exclude" in form.cleaned_data and form.cleaned_data["labels_to_exclude"]:
+                if games is None:
+                    games = Game.objects
+                for label in form.cleaned_data["labels_to_exclude"]:
+                    games = games.exclude(labels__label=label)
 
     else:
         form = InventoryFilterForm(Location.objects.all(), Label.objects.all())
