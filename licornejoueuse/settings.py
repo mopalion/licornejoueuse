@@ -21,15 +21,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&hxwq7^)-*xp)h5x(ge7j9#mqqdb8_p@3%oqsdg1i_-(a10&_3'
+SECRET_KEY = getenv("SECRET_KEY")
+if SECRET_KEY is None:
+    SECRET_KEY = 'django-insecure-&hxwq7^)-*xp)h5x(ge7j9#mqqdb8_p@3%oqsdg1i_-(a10&_3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+IS_PROD = getenv("IS_PROD")
+if IS_PROD is None:
+    DEBUG  = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ["licorne.delaborde.fr", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["https://licorne.delaborde.fr"]
-CSRF_ALLOWED_ORIGINS = ["https://licorne.delaborde.fr"]
-CORS_ORIGINS_WHITELIST = ["https://licorne.delaborde.fr"]
+ALLOWED_HOSTS = ["ludotheque.licornejoueuse.org", "licorne.delaborde.fr", "localhost"]
+CSRF_TRUSTED_ORIGINS = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
+CSRF_ALLOWED_ORIGINS = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
+CORS_ORIGINS_WHITELIST = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
 
 
 # Application definition
