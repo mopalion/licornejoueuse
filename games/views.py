@@ -109,9 +109,7 @@ def location_detail(request, name):
     return render(request, "games/location_detail.html", context)
 
 def generate_game_csv(request):
-    file = Game.extract_data()
-    file.seek(0)
-    
+    file = export_model()
     response = HttpResponse(
         file,
         content_type="text/csv",
@@ -122,8 +120,7 @@ def generate_game_csv(request):
     return response
 
 def generate_comment_csv(request):
-    file = Comment.extract_data()
-    file.seek(0)
+    file = export_model(model_to_export=Comment)
     
     response = HttpResponse(
         file,

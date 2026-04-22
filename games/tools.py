@@ -110,3 +110,12 @@ def generate_label_sheets(games):
     layout_fun = img2pdf.get_layout_fun(a4inpt)
     pdf_file.write(img2pdf.convert(list(map(lambda x: x.getvalue(), sheets)), layout_fun=layout_fun))
     return pdf_file 
+
+def export_model(model_to_export=Game, file_path=None):
+    string_buffer = model_to_export.extract_data()
+    string_buffer.seek(0)
+    if file_path is None:
+        return file
+    else:
+        with open(file_path, "w") as file:
+            shutil.copyfileobj(string_buffer, file)
