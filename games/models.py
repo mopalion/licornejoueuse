@@ -82,6 +82,9 @@ col_choices = [
 
 ]
 class Game(models.Model):
+    class Meta:
+        ordering = ["number"]
+
     name = models.CharField(max_length=200, blank=False)
     
     games_library_categorization = models.CharField(max_length=1, blank=True, choices=COL_CHOICES)
