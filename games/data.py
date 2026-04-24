@@ -130,8 +130,6 @@ def get_game(row, site, à_vendre):
             game.mechanisms.add(mechanism)
     if row["Commentaires"] != "":
         game.comment_set.create(text=row["Commentaires"], created_date=cast_date("01/01/1970"))
-    if row["Manque"] != "":
-        game.comment_set.create(text="MANQUE: "+row["Manque"], created_date=cast_date("01/01/1970"))
 
 def load_data(csvfilename):
     locations = Location.objects.filter(name="Inconnu")
