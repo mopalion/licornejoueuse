@@ -10,6 +10,7 @@ from django.conf import settings
 import re
 import traceback
 from os import getenv
+import shutil
 
 def log_error_in_file(e):
     django_errors_dir = getenv("DJANGO_ERRORS_DIR")
@@ -164,3 +165,16 @@ def load_data(csvfilename):
                 fd.write(name + "\n")
                 fd.write(str(exception))
                 fd.write("\n")
+
+
+def get_csv(model_to_extract=Game, file_name=""):
+    if file_name == "":
+        file_name = f"data-{ model_to_extract.__name__ }.csv"
+    buffer = model_to_extract.extract_data()
+    buffer.seek(0)
+
+    if file_name is not None:
+        with open(file_name, "w") as file:
+            shutil.copyfileobj(buffer, file)
+    else:
+        return buffer
