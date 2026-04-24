@@ -17,6 +17,7 @@ import pickle
 from itertools import chain
 
 from .models import Game,Location, Comment, Label
+from .data import get_csv
 
 def generate_parameters(parameters):
     get_parameters = ""
@@ -109,8 +110,7 @@ def location_detail(request, name):
     return render(request, "games/location_detail.html", context)
 
 def generate_game_csv(request):
-    file = Game.extract_data()
-    file.seek(0)
+    file = get_csv(file_name=None)
     
     response = HttpResponse(
         file,
@@ -122,8 +122,7 @@ def generate_game_csv(request):
     return response
 
 def generate_comment_csv(request):
-    file = Comment.extract_data()
-    file.seek(0)
+    file = get_csv(model_to_extract=Comment, file_name=None)
     
     response = HttpResponse(
         file,
