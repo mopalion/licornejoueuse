@@ -43,6 +43,13 @@ COL_SUB = [
     ("fab", "fabrication"),
 ]
 
+# Type de jeu: précise si les différentes valeurs possibles de type de jeu.
+GAME_TYPE_CHOICES = [
+    ("boardgame", "jds"),   # jeu de société
+    ("rpg", "jdr"),         # jeu de rôle
+    ("wooden", "bois"),     # jeu en bois
+    ("toys", "jouet"),      # jouet
+]
 
 # ============================================================
 # MODÈLES DE RÉFÉRENCE (entités liées aux jeux via ForeignKey ou ManyToMany)
@@ -198,12 +205,7 @@ class Game(models.Model):
     game_type = models.CharField(
         max_length=20,
         default="boardgame",
-        choices=[
-            ("boardgame", "jds"),   # jeu de société
-            ("rpg", "jdr"),         # jeu de rôle
-            ("wooden", "bois"),     # jeu en bois
-            ("toys", "jouet"),      # jouet
-        ],
+        choices=GAME_TYPE_CHOICES,
     )
     last_inventory_date = models.DateField("last inventory date", blank=True, null=True)
     rules_video_link = models.CharField(max_length=100, blank=True, null=True)

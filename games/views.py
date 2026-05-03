@@ -301,6 +301,10 @@ def select_games(request):
                 if games is None:
                     games = Game.objects
                 games = games.filter(name__icontains=form.cleaned_data["name"])
+            if "game_type" in form.cleaned_data and form.cleaned_data["game_type"]:
+                if games is None:
+                    games = Game.objects
+                games = games.filter(game_type=form.cleaned_data["game_type"])
             if "min_number" in form.cleaned_data and form.cleaned_data["min_number"]:
                 if games is None:
                     games = Game.objects
