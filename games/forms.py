@@ -2,7 +2,7 @@ from django import forms
 import datetime
 from copy import copy
 
-from games.models import Game, COL_CHOICES, COL_SUB, Comment
+from games.models import Game, COL_CHOICES, COL_SUB, Comment, GAME_TYPE_CHOICES
 
 class UnicornTextInputWidget(forms.TextInput):
     """
@@ -55,6 +55,7 @@ class InventoryFilterForm(forms.Form):
     def __init__(self, locations, labels, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["name"] = forms.CharField(max_length=100, required=False, label="Nom du jeu", widget=UnicornTextInputWidget)
+        self.fields["game_type"] = forms.ChoiceField(choices=GAME_TYPE_CHOICES, required=False, label="Type de jeu", widget=UnicornSelectWidget)
         self.fields["min_number"] = forms.IntegerField(min_value=1,max_value=2000, required=False, label="Numéro minimal du jeu", widget=UnicornTextInputWidget)
         self.fields["max_number"] = forms.IntegerField(min_value=1,max_value=2000, required=False, label="Numéro maximal du jeu", widget=UnicornTextInputWidget)
         locations_choices = [(x.name,x.name) for x in locations]
