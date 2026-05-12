@@ -4,4 +4,3 @@ docker-compose.yml
 Dockerfile
 Dockerfile-myludo
 data
-static
