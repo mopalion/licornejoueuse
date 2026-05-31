@@ -154,7 +154,7 @@ class GameForm(forms.ModelForm):
         form_col_choices = copy(COL_CHOICES)
         form_col_choices.insert(0,("", "---"))
         form_col_sub = copy(COL_SUB)
-        form_col_sub.insert(0, ("", "---"))
+        form_col_sub.insert(0, (None, "---"))
         games_library_categorization = forms.ChoiceField(required=False, choices=form_col_choices, widget=UnicornSelectWidget())
         adapted_games_library_categorization_1 = forms.ChoiceField(required=False, choices=form_col_sub, widget=UnicornSelectWidget())
         adapted_games_library_categorization_2 = forms.ChoiceField(required=False, choices=form_col_sub, widget=UnicornSelectWidget())
