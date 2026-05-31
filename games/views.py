@@ -436,9 +436,9 @@ def update_game(request, number):
                 if items_to_add or items_to_remove:
                     modification = f"{form.fields[field].label} => "
                     for item in items_to_add:
-                        modification += f"+{item.name}"
+                        modification += f"+{item.label}"
                     for item in items_to_remove:
-                        modification += f"-{item.name}"
+                        modification += f"-{item.label}"
                     modifications.append(modification)
 
 
