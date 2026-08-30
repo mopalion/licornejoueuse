@@ -33,6 +33,15 @@ def generate_parameters(parameters):
 
 
 def index(request, game_type="boardgame"):
+    """
+    Affiche la page d'accueil listant les jeux d'un type donné.
+
+    Args:
+        request: objet Django Request.
+        game_type: type de jeu à afficher (boardgame, wooden, rpg, toys).
+    Returns:
+        la page de liste rendue avec la pagination et le formulaire de filtre.
+    """
     parameters = {}
     if 'page' in request.GET:
         page_number = int(request.GET["page"])
@@ -94,22 +103,56 @@ def index(request, game_type="boardgame"):
     return render(request, "games/index.html", context)
 
 def location_index(request):
+    """
+    Affiche la liste de tous les lieux de rangement.
+
+    Args:
+        request: objet Django Request.
+    Returns:
+        la page de liste des lieux rendue.
+    """
     context = {}
     context["locations"] = Location.objects.all()[:]
     return render(request, "games/location_index.html", context)
 
 def detail(request, number):
+    """
+    Affiche le détail d'un jeu.
+
+    Args:
+        request: objet Django Request.
+        number: numéro du jeu à afficher.
+    Returns:
+        la page de détail du jeu rendue, ou une 404 si le jeu n'existe pas.
+    """
     game = get_object_or_404(Game, number=number)
     context = {"game": game}
     return render(request, "games/game.html", context)
 
 def location_detail(request, name):
+    """
+    Affiche le détail d'un lieu de rangement.
+
+    Args:
+        request: objet Django Request.
+        name: nom du lieu à afficher.
+    Returns:
+        la page de détail du lieu rendue, ou une 404 si le lieu n'existe pas.
+    """
     context = {}
     context["location"] = get_object_or_404(Location, name=name)
 
     return render(request, "games/location_detail.html", context)
 
 def generate_game_csv(request):
+    """
+    Télécharge l'ensemble des jeux au format CSV.
+
+    Args:
+        request: objet Django Request.
+    Returns:
+        une réponse HTTP diffusant le fichier CSV.
+    """
     file = get_csv(file_name=None)
     
     response = HttpResponse(
@@ -122,6 +165,14 @@ def generate_game_csv(request):
     return response
 
 def generate_comment_csv(request):
+    """
+    Télécharge l'ensemble des commentaires au format CSV.
+
+    Args:
+        request: objet Django Request.
+    Returns:
+        une réponse HTTP diffusant le fichier CSV.
+    """
     file = get_csv(model_to_extract=Comment, file_name=None)
     
     response = HttpResponse(
@@ -148,12 +199,12 @@ def get_selected_games(post_data):
 @login_required
 def inventory_index(request):
     """
-    Root request to actions or selecting games views.
+    Point d'entrée vers les vues d'actions ou de sélection de jeux.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        result of rooted view
+        le résultat de la vue vers laquelle on a redirigé.
     """
     if request.method == "POST":
         if "actions" in request.POST and request.POST["actions"]:
@@ -167,12 +218,13 @@ def inventory_index(request):
 @login_required
 def batch(request):
     """
-    Modify selected games in batch.
+    Modifie en lot les jeux sélectionnés.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        the form to select attributes to change or redirect to inventory page if attributes was modified.
+        le formulaire de sélection des attributs à modifier, ou une redirection
+        vers la page d'inventaire si les attributs ont été modifiés.
     """
     locations = Location.objects.all()
     labels = Label.objects.all()
@@ -248,12 +300,12 @@ def batch(request):
 @login_required
 def print_labels(request):
     """
-    Create pdf with labels of each selected games.
+    Crée un PDF avec les étiquettes de chacun des jeux sélectionnés.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        the pdf file to print selected games’s labels.
+        le fichier PDF à imprimer avec les étiquettes des jeux sélectionnés.
     """
     selected_games = get_selected_games(request.POST)
 
@@ -276,12 +328,12 @@ def print_labels(request):
     
 def select_games(request):
     """
-    Allow user to select games.
+    Permet à l'utilisateur de sélectionner des jeux.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        the form to select games.
+        le formulaire de sélection de jeux.
     """
     games = None
     selected_games = set()
@@ -296,7 +348,7 @@ def select_games(request):
             selected_games = set(request.session["selected_games"])
         form = InventoryFilterForm(Location.objects.all(), Label.objects.all(), request.POST)
         if form.is_valid():
-            # Apply differents filters to games.
+            # Applique les différents filtres aux jeux.
             if "name" in form.cleaned_data and form.cleaned_data["name"]:
                 if games is None:
                     games = Game.objects
@@ -342,14 +394,14 @@ def select_games(request):
     if games is None:
         games = Game.objects.all()
 
-    # Allow to save selected games in previous filters.
+    # Permet de conserver les jeux sélectionnés des précédents filtres.
     for game in games:
         if game.number in selected_games:
             current_selected_games.add(game.number)
             selected_games.remove(game.number)
     selected_games_to_display = Game.objects.filter(number__in=selected_games)
 
-    # Prepare shortcuts links
+    # Prépare les liens de raccourcis
     shortcuts = []
     if games:
         i_games = iter(games)
@@ -381,16 +433,17 @@ def select_games(request):
 @login_required
 def update_game(request, number):
     """
-    First call : display a form to update the game of number number
+    Premier appel : affiche un formulaire pour modifier le jeu de numéro number
 
-    Second call: if form is valid, display modifications in top of the page and ask confirmation
-    Third call : update the game of number number and redirect to game_added
+    Deuxième appel : si le formulaire est valide, affiche les modifications en
+    haut de la page et demande confirmation
+    Troisième appel : modifie le jeu de numéro number et redirige vers game_added
 
     Args:
-        request: Django Request object.
-        int: number of the game to edit
+        request: objet Django Request.
+        int: numéro du jeu à modifier
     Returns:
-        the form to edit the game.
+        le formulaire de modification du jeu.
     """
     game = Game.objects.get(number=number)
     errors = []
@@ -412,7 +465,7 @@ def update_game(request, number):
         updated_game = Game.objects.get(number=number)
         form = GameForm(request.POST, request.FILES, instance=updated_game)
         if form.is_valid():
-            # we get modifications on all fields except many_to_many relationships
+            # On récupère les modifications sur tous les champs sauf les relations many_to_many
             for field in filter(lambda x: x not in ["id"], map(lambda x: x.name,Game._meta.fields)):
                 if field == "image":
                     if "image" in request.FILES:
@@ -422,7 +475,7 @@ def update_game(request, number):
                     if getattr(updated_game, field) != getattr(game, field) and (getattr(updated_game, field) is not None or getattr(game, field) != ""):
                         modifications.append(f"{form.fields[field].label} => {getattr(updated_game, field)}")
 
-            # we get modifications on many_to_many relationships
+            # On récupère les modifications sur les relations many_to_many
             for field in filter(lambda x: x not in ["id"], map(lambda x: x.name, Game._meta.many_to_many)):
                 new_items = request.POST.getlist(field)
                 items_to_remove = []
@@ -474,12 +527,13 @@ def update_game(request, number):
 @login_required
 def add_game(request):
     """
-    Allow user to add a new game. Create game if post data was sent.
+    Permet à l'utilisateur d'ajouter un nouveau jeu. Crée le jeu si des données
+    POST ont été envoyées.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        the form to edit the game.
+        le formulaire de création du jeu.
     """
     errors = []
     new_number = Game.objects.aggregate(Max('number'))["number__max"] + 1
@@ -509,13 +563,13 @@ def add_game(request):
 @login_required
 def game_added(request, number):
     """
-    Display that a game was modified/added.
+    Affiche qu'un jeu a été modifié/ajouté.
 
     Args:
-        request: Django Request object.
-        int: Number of the game that was added or updated.
+        request: objet Django Request.
+        int: numéro du jeu qui a été ajouté ou mis à jour.
     Returns:
-        The confirmation of the upgrade.
+        la confirmation de la modification.
     """
 
     game = Game.objects.get(number=number)
@@ -524,13 +578,13 @@ def game_added(request, number):
 @login_required
 def new_comment(request, number):
     """
-    Add a new comment for the game with indicated number
+    Ajoute un nouveau commentaire pour le jeu portant le numéro indiqué.
 
     Args:
-        request: Django Request object,
-        int: Number of the game that received new comment
+        request: objet Django Request,
+        int: numéro du jeu ayant reçu le nouveau commentaire
     Returns:
-        The form to add a new comment
+        le formulaire d'ajout d'un nouveau commentaire
     """
     form = None
 
@@ -552,12 +606,12 @@ def new_comment(request, number):
 @login_required
 def comment_added(request):
     """
-    Display that a comment was added.
+    Affiche qu'un commentaire a été ajouté.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        The confirmation of the upgrade.
+        la confirmation de l'ajout.
     """
 
     return render(request, "games/comment_added.html")
@@ -565,13 +619,13 @@ def comment_added(request):
 @login_required
 def delete_game(request, number):
     """
-    Propose to delete the game with number number
+    Propose de supprimer le jeu de numéro number.
 
     Args:
-        request: Django Request object.
-        number: number of game to delete
+        request: objet Django Request.
+        number: numéro du jeu à supprimer
     Returns:
-        The delete page or redirect if game is deleted
+        la page de suppression ou une redirection si le jeu est supprimé
     """
     game = Game.objects.get(number=number)
     if request.method == "POST":
@@ -582,11 +636,11 @@ def delete_game(request, number):
 @login_required
 def game_deleted(request):
     """
-    Validate the deletion of a game
+    Valide la suppression d'un jeu.
 
     Args:
-        request: Django Request object.
+        request: objet Django Request.
     Returns:
-        The validation of deleted game page
+        la page de validation de la suppression du jeu
     """
     return render(request, "games/game_deleted.html")
