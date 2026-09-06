@@ -10,3 +10,4 @@ medias
 row.data
 errors.txt
 games/migrations/*
+node_modules/*
