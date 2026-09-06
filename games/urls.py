@@ -21,4 +21,8 @@ urlpatterns = [
         path("inventory/comment_added/", views.comment_added, name="comment_added"),
         path("inventory/games/delete/<int:number>/", views.delete_game, name="delete_game"),
         path("inventory/games/deleted_game/", views.game_deleted, name="game_deleted"),
+        path("inventory/labels/", views.labels_index, name="labels_index"),
+        path("inventory/labels/new/", views.add_label, name="add_label"),
+        path("inventory/labels/<int:id>/", views.update_label, name="update_label"),
+        path("inventory/labels/delete/<int:id>/", views.delete_label, name="delete_label"),
         ]

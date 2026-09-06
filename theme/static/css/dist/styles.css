@@ -2352,6 +2352,19 @@
   .border-zinc-800 {
     border-color: var(--color-zinc-800);
   }
+  @layer daisyui.l1.l2 {
+    .table-zebra tbody tr:where(:nth-child(even)) {
+      background-color: var(--color-base-200);
+    }
+    .table-zebra tbody tr:where(:nth-child(even)) :where(.table-pin-cols tr th) {
+      background-color: var(--color-base-200);
+    }
+    @media (hover: hover) {
+      .table-zebra tbody tr.row-hover:hover, .table-zebra tbody tr.row-hover:where(:nth-child(even)):hover {
+        background-color: var(--color-base-300);
+      }
+    }
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }

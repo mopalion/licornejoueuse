@@ -2,7 +2,7 @@ from django import forms
 import datetime
 from copy import copy
 
-from games.models import Game, COL_CHOICES, COL_SUB, Comment, GAME_TYPE_CHOICES
+from games.models import Game, COL_CHOICES, COL_SUB, Comment, Label, GAME_TYPE_CHOICES
 
 class UnicornTextInputWidget(forms.TextInput):
     """
@@ -212,3 +212,18 @@ class CommentForm(forms.ModelForm):
         }
 
 CommentForms = forms.modelformset_factory(Comment, form=CommentForm, extra=0, can_delete=True)
+
+class LabelForm(forms.ModelForm):
+    """
+    Formulaire de création / modification d'un label.
+    """
+    class Meta:
+        model = Label
+        fields = [
+            "label",
+            "description",
+        ]
+        widgets = {
+            "label": UnicornTextInputWidget(),
+            "description": UnicornTextAreaWidget(),
+        }

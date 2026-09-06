@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import Max
 import segno
-from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm, CommentForms
+from .forms import GameFilterForm,InventoryFilterForm, BatchForm, GameForm, CommentForm, CommentForms, LabelForm
 from os import makedirs
 import requests
 from .tools import generate_label_sheets
@@ -644,3 +644,76 @@ def game_deleted(request):
         la page de validation de la suppression du jeu
     """
     return render(request, "games/game_deleted.html")
+
+@login_required
+def labels_index(request):
+    """
+    Liste tous les labels existants.
+
+    Args:
+        request: objet Django Request.
+    Returns:
+        la page de liste des labels.
+    """
+    labels = Label.objects.order_by("label")
+    return render(request, "games/labels_index.html", {"labels": labels})
+
+@login_required
+def add_label(request):
+    """
+    Affiche le formulaire de création d'un label et le crée à la soumission.
+
+    Args:
+        request: objet Django Request.
+    Returns:
+        le formulaire de création d'un label ou une redirection vers la liste
+        si le label a été créé.
+    """
+    if request.method == "POST":
+        form = LabelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("labels_index")
+    else:
+        form = LabelForm()
+    return render(request, "games/label_form.html", {"form": form, "title": "Créer un label"})
+
+@login_required
+def update_label(request, id):
+    """
+    Affiche le formulaire de modification d'un label et le met à jour à la soumission.
+
+    Args:
+        request: objet Django Request.
+        id: identifiant du label à modifier.
+    Returns:
+        le formulaire de modification du label ou une redirection vers la liste
+        si le label a été mis à jour.
+    """
+    label = get_object_or_404(Label, id=id)
+    if request.method == "POST":
+        form = LabelForm(request.POST, instance=label)
+        if form.is_valid():
+            form.save()
+            return redirect("labels_index")
+    else:
+        form = LabelForm(instance=label)
+    return render(request, "games/label_form.html", {"form": form, "title": "Modifier un label"})
+
+@login_required
+def delete_label(request, id):
+    """
+    Propose de supprimer un label et le supprime à la soumission.
+
+    Args:
+        request: objet Django Request.
+        id: identifiant du label à supprimer.
+    Returns:
+        la page de confirmation de suppression ou une redirection vers la liste
+        si le label a été supprimé.
+    """
+    label = get_object_or_404(Label, id=id)
+    if request.method == "POST":
+        label.delete()
+        return redirect("labels_index")
+    return render(request, "games/delete_label.html", {"label": label})
