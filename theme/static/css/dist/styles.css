@@ -32,8 +32,11 @@
     --text-base--line-height: calc(1.5 / 1);
     --text-xl: 1.25rem;
     --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
     --text-5xl: 3rem;
     --text-5xl--line-height: 1;
+    --font-weight-bold: 700;
     --font-weight-black: 900;
     --tracking-normal: 0em;
     --leading-normal: 1.5;
@@ -2312,6 +2315,9 @@
   .place-content-around {
     place-content: space-around;
   }
+  .content-center {
+    align-content: center;
+  }
   .items-center {
     align-items: center;
   }
@@ -2351,6 +2357,19 @@
   }
   .border-zinc-800 {
     border-color: var(--color-zinc-800);
+  }
+  @layer daisyui.l1.l2 {
+    .table-zebra tbody tr:where(:nth-child(even)) {
+      background-color: var(--color-base-200);
+    }
+    .table-zebra tbody tr:where(:nth-child(even)) :where(.table-pin-cols tr th) {
+      background-color: var(--color-base-200);
+    }
+    @media (hover: hover) {
+      .table-zebra tbody tr.row-hover:hover, .table-zebra tbody tr.row-hover:where(:nth-child(even)):hover {
+        background-color: var(--color-base-300);
+      }
+    }
   }
   .bg-base-100 {
     background-color: var(--color-base-100);
@@ -2400,8 +2419,15 @@
   .pl-10 {
     padding-left: calc(var(--spacing) * 10);
   }
+  .text-center {
+    text-align: center;
+  }
   .font-serif {
     font-family: var(--font-serif);
+  }
+  .text-2xl {
+    font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
   }
   .text-5xl {
     font-size: var(--text-5xl);
@@ -2422,6 +2448,10 @@
   .font-black {
     --tw-font-weight: var(--font-weight-black);
     font-weight: var(--font-weight-black);
+  }
+  .font-bold {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
   }
   .tracking-normal {
     --tw-tracking: var(--tracking-normal);
@@ -2468,6 +2498,12 @@
   }
   .text-zinc-950 {
     color: var(--color-zinc-950);
+  }
+  .decoration-double {
+    text-decoration-style: double;
+  }
+  .decoration-solid {
+    text-decoration-style: solid;
   }
   .shadow-sm {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));

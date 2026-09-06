@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" class="bg-zinc-200">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" class="btn m-2">Enregistrer</button>
+</form>
+<button class="btn m-2" type="button">
+  <a href="{% url 'labels_index' %}">Retour à la liste</a>
+</button>
+{% endblock %}
