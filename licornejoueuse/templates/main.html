@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Licorne Joueuse</title>
   {% tailwind_css %}
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=action_key,add_circle,admin_panel_settings,align_center,chat,close,crisis_alert,delete,filter_list,filter_list_off,login,logout,save,shelves,sync_saved_locally,view_list" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=action_key,add_circle,admin_panel_settings,align_center,chat,close,crisis_alert,delete,edit,filter_list,filter_list_off,login,logout,save,shelves,sync_saved_locally,view_list" rel="stylesheet">
   <style type="text/css">
     .material-symbols-outlined.text-base {
       font-size: 2em;
@@ -41,6 +41,7 @@
           <summary><span class="material-symbols-outlined text-base">view_list</span>Inventaire</summary>
             <ul class="bg-base-100 rounded-t-none p-2 z-50 bg-zinc-900">
               <li><a href="{% url 'inventory_index' %}">Liste</a></li>
+              <li><a href="{% url 'labels_index' %}">Labels</a></li>
               <li><a href="{% url 'generate_game_csv' %}">Jeux - CSV</a></li>
               <li><a href="{% url 'generate_comment_csv' %}">Commentaires - CSV</a></li>
             </ul>

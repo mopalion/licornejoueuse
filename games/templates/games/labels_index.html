@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% block content %}
+	<h1 class="text-xl text-center font-bold">Gestion des labels</h1>
+	<button class="btn btn-outline m-2 border-orange-500 border-2" type="button">
+		<a href="{% url 'add_label' %}"><span class="material-symbols-outlined text-base">add_circle</span> Créer un label</a>
+	</button>
+	{% if labels %}
+		<table class="table table-zebra">
+			<thead>
+				<tr>
+					<th>Label</th>
+					<th>Description</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for label in labels %}
+				<tr>
+					<td><a href="{% url 'label_detail' label.id %}">{{ label.label }}</a></td>
+					<td><a href="{% url 'label_detail' label.id %}">{{ label.description }}</a></td>
+					<td>
+						<a href="{% url 'update_label' label.id %}"><span class="material-symbols-outlined text-base">edit</span> Modifier</a>
+						<a href="{% url 'delete_label' label.id %}"><span class="material-symbols-outlined text-base">delete</span> Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Vous n'avez pas encore de labels.</p>
+	{% endif %}
+{% endblock %}
