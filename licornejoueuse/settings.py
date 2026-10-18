@@ -12,30 +12,54 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 from pathlib import Path
 from os import getenv
+from dotenv import load_dotenv
 
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
+VARIABLES_TO_DEFINE = {
+        "SECRET_KEY": str,
+        "ALLOWED_HOSTS": lambda x: x.split(","),
+        "DEBUG": lambda x: x.lower() == "true",
+        "DJANGO_DB_ENGINE": str,
+        "DJANGO_DB_DIR": str,
+        "STATIC_URL": str,
+        "STATIC_ROOT": str,
+        "DJANGO_HOST": str,
+        "MEDIA_URL": str,
+        "MEDIA_ROOT": str,
+}
+not_defined_variables = []
+config = {}
+
+for variable, converter in VARIABLES_TO_DEFINE.items():
+    value = getenv(variable)
+    if value is None:
+        not_defined_variables.append(variable)
+    else:
+        config[variable] = converter(value)
+
+if not_defined_variables != []:
+    print("Les variables de configurations suivantes doivent être définies dans l’environnement (Nous vous conseillons d’utiliser un fichier .env) :")
+    for variable in not_defined_variables:
+        print(f"- {variable}")
+    exit(1)
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv("SECRET_KEY")
-if SECRET_KEY is None:
-    SECRET_KEY = 'django-insecure-&hxwq7^)-*xp)h5x(ge7j9#mqqdb8_p@3%oqsdg1i_-(a10&_3'
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-IS_PROD = getenv("IS_PROD")
-if IS_PROD is None:
-    DEBUG  = True
-else:
-    DEBUG = False
+DEBUG=config["DEBUG"]
 
-ALLOWED_HOSTS = ["ludotheque.licornejoueuse.org", "licorne.delaborde.fr", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
-CSRF_ALLOWED_ORIGINS = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
-CORS_ORIGINS_WHITELIST = ["https://ludotheque.licornejoueuse.org", "https://licorne.delaborde.fr"]
+
+ALLOWED_HOSTS = config["ALLOWED_HOSTS"]
+CSRF_TRUSTED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS))
+CSRF_ALLOWED_ORIGINS = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS))
+CSRF_ORIGINS_WHITELIST = list(map(lambda x: f"https://{x}", ALLOWED_HOSTS))
 
 
 # Application definition
@@ -93,13 +117,10 @@ WSGI_APPLICATION = 'licornejoueuse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-database_dir = getenv("DJANGO_DB_DIR")
-if database_dir is None:
-    database_dir = BASE_DIR / 'db.sqlite3'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': database_dir,
+        'ENGINE': config["DJANGO_DB_ENGINE"],
+        'NAME': config["DJANGO_DB_DIR"],
     }
 }
 
@@ -137,23 +158,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = getenv("STATIC_URL")
-if STATIC_URL is None:
-    STATIC_URL = "static/"
+STATIC_URL = config["STATIC_URL"]
 STATICFILES_DIRS = [
         BASE_DIR / "static",
         ]
-STATIC_ROOT = "data/static/"
+STATIC_ROOT = config["STATIC_ROOT"]
 
 TAILWIND_APP_NAME = "theme"
 
-DJANGO_HOST = getenv("DJANGO_HOST")
-if DJANGO_HOST is None:
-    DJANGO_HOST = "https://ludotheque.licornejoueuse.org"
+DJANGO_HOST = config["DJANGO_HOST"]
 
-MEDIA_URL = getenv("MEDIA_URL")
-if MEDIA_URL is None:
-    MEDIA_URL = "media/"
-MEDIA_ROOT = getenv("MEDIA_ROOT")
-if MEDIA_ROOT is None:
-    MEDIA_ROOT = "data/media/"
+MEDIA_URL = config["MEDIA_URL"]
+MEDIA_ROOT = config["MEDIA_ROOT"]
